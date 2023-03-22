@@ -1,0 +1,147 @@
+
+  
+  body { 
+    color: #111;
+    font-family: 'Roboto', sans-serif;
+    background: #F1F1F4;
+  }
+  
+  .card-section {
+    margin: 15px 0 20px 0;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .card-section > h1 {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  
+  .card-section > h4 {
+    color: #999;
+    margin-top: 3px;
+    margin-bottom: 6px;
+  }
+  
+  .card-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .card {
+    min-width: 300px;
+    height: 300px;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 15px 20px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2), 0 0 5px rgba(0,0,0,0.15);
+    transform: scale3d(1, 1, 1);
+    transition: all 0.2s ease-out, filter 0.75s ease-out;
+    background: rgba(0,0,0,0.2);
+    filter: grayscale(0.1) saturate(95%) brightness(95%) contrast(90%);
+  }
+  
+  .card:hover {
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 15px rgba(0,0,0,0.3);
+    filter: grayscale(0) saturate(105%) brightness(100%) contrast(100%);
+    
+  }
+  
+  .card > img {
+    position: absolute;
+    width: 108%;
+    height: 108%;
+    top: -4%;
+    left: -4%;
+    z-index: -10;
+    transform: scale(1.05);
+    transition: all 0.2s ease-out, transform 0.2s ease-out, filter 0.75s ease-out;
+    filter: blur(0px);
+  }
+  
+  .card.blur > img {
+    filter: blur(1px) grayscale(0.1) saturate(95%);
+  }
+  
+  .card > .shineLayer {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 80%);
+    transition: all 0.2s ease-out;
+  }
+
+
+
+/*Botones index*/
+.texto_imagen{
+position: absolute;
+top: 80%;
+left: 50%;
+transform: translate(-50%, -50%);
+background-color: #F1F1F4;
+}
+
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,800);
+
+*, *:before, *:after{
+box-sizing: border-box;
+padding: 0; margin: 0;
+font: 300 1em/1.5 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
+text-decoration: none;
+color: #111;
+background-color: #F1F1F4;
+}
+
+html, body{background: rgb(236, 240, 241);}
+
+section.container{
+min-width: 500px;
+margin: 10% auto;
+text-align: center;
+}
+a:hover{border-bottom: 1px solid #111;} 
+h1{font-size: 2em; padding: 20px 0;}
+p{
+    font-size: .75em;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 20px 0;
+}
+
+button:hover{cursor: pointer}
+button {
+    background: transparent; outline: none;
+    position: relative;
+    border: 2px solid #111;
+    padding: 15px 50px;
+    overflow: hidden;
+}
+
+/*button:before (attr data-hover)*/
+button:hover:before{opacity: 1; transform: translate(0,0);}
+button:before{
+    content: attr(data-hover);
+    position: absolute;
+    top: 1.1em; left: 0;
+    width: 100%;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-weight: 800;
+    font-size: .8em;
+    opacity: 0;
+    transform: translate(-100%,0);
+    transition: all .3s ease-in-out;
+}
+    /*button div (button text before hover)*/
+    button:hover div{opacity: 0; transform: translate(100%,0)}
+    button div{
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-weight: 800;
+    font-size: .8em;
+    transition: all .3s ease-in-out;
+    }

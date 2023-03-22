@@ -1,0 +1,26 @@
+
+.navbar, .container-fluid, .navbar-brand, .navbar-collapse, .navbar-nav, .nav-item, .nav-link{
+    background-color: rgba(255, 0, 0, 0) !important;
+    color: rgb(0, 0, 0)!important;
+    border-bottom: #000000;
+}
+
+.nav-item:hover:hover, .nav-link:hover, .navbar-brand:hover{
+    border-bottom: rgb(0, 0, 0) 1px solid!important;
+}
+
+.container-fluid{
+    border-bottom: 1px black solid
+}
+  
+#logo{
+    height:250px;
+}
+
+#divLogo{
+    background-color: #000000;
+    display: flex;
+    justify-content: center;
+    height: 260px;
+}
+

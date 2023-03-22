@@ -1,0 +1,49 @@
+main{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    
+}
+
+input{
+    border-top-left-radius: 2cm!important;
+    border-bottom-left-radius: 2cm!important;
+    height: 50px;
+
+}
+
+.card{
+    padding: 0;
+}
+
+#divBusqueda{
+    display: flex;
+    justify-content: center;
+    width: 75%;
+    margin:0px auto; 
+}
+
+#botonBuscar{
+    border: none;
+    height: 100%;
+    width: 100%;
+    border-top-right-radius: 2cm!important;
+    border-bottom-right-radius: 2cm!important;
+}
+
+#addon-wrapping{
+    padding: 0;
+    border-top-right-radius: 2cm!important;
+    border-bottom-right-radius: 2cm!important;
+    width: 30%;
+}
+
+.row{
+    gap: 20px
+}
+
+#divCards{
+    justify-content: center;
+    margin:0px auto;
+}

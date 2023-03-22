@@ -1,0 +1,33 @@
+
+<head>
+    {{> head}}
+    <link rel="stylesheet" href="/css/cards.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    
+</head>
+
+<body>
+    <header>
+        {{> nav}}
+    </header>
+    <main>
+        <div class="card-section">        
+            <div class="card-list">
+                
+                <div class="card">
+                    <img  src="https://media.istockphoto.com/id/610774282/es/vector/icono-de-lupa-vectorial-aislado-sobre-fondo-azul.jpg?s=612x612&w=0&k=20&c=b9_j1OQ11RmTV3goMGZtUG6zKube3vR2OlxEbWW_8Ek="/>
+                    <a href="/busqueda"><button data-hover="Vamos!" class="texto_imagen"><div>Buscar Oferta</div></button></a>
+                </div>
+                
+                <div class="card">
+                    <img src="https://img.blogs.es/anexom/wp-content/uploads/2018/02/crear-mapa-google-personalizado.jpg"/>
+                    <a href="/subir-oferta"><button data-hover="Vamos!" class="texto_imagen"><div>Subir Oferta</div></button></a>
+                </div>
+            </div>
+        </div>
+    </main>
+    {{> footer}}
+</body>
+{{> scripts}}
+<script src="cards.js"></script>
+</html>
