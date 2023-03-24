@@ -1,0 +1,25 @@
+{{#> template}}
+
+<main>
+    <div class="card" style="width: 18rem;">
+
+        <div class="card-body">
+            <h5 class="card-title">Login</h5>
+            <form action="ingreso" method="post">
+                <div class="mb-3">
+                    <label for="user" class="form-label">Correo electrónico</label>
+                    <input type="email" class="form-control" id="user" name="username" required>
+                    
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Ingresar</button>
+            </form>
+            
+        </div>
+    </div>
+</main>
+{{/template}}

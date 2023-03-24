@@ -1,0 +1,445 @@
+[
+    {"Tecnología": {
+        "Telefonía":{   
+            "Smartphones":[],
+            "Carcasas":[],
+            "Soporte y Accesorios de Celulares":[],
+            "Láminas Protectoras":[],
+            "Teléfonos Fijos":[]
+            },
+
+        "Notebooks, Tablets y Monitores":{
+            "Notebooks y Macbooks":[],
+            "All in One, iMac y Gabinetes Gamer":{
+                "All in One":[],
+                "iMac":[],
+                "Desktop y Gabinetes Gamer":[]
+            },                          
+            "Tablets, iPads y Kindles":[],
+            "Monitores":[],
+            "Accesorios para Monitores":[],
+            "Accesorios para Tablet":[],
+            "Fundas para Notebook":[]
+        },
+
+        "Televisión":{
+            "Smart TV":[],
+            "Streaming":[],
+            "Proyectores":[],
+            "Soportes de TV y de Proyectores":[],
+            "Controles Remoto y Antenas":[]
+        },
+
+        "Audífonos y Parlantes":{
+            "Audífonos":[],
+            "Parlantes y Minicomponentes":[],
+            "Soundbar y Subwoofers":[],
+            "DJ y Audio Especializado":[],
+            "Amplificadores de Sonido":[],
+            "Micrófonos":[],
+            "Radios y Walkie Talkie":[]
+        },
+
+        "Wearables":{
+            "Smartwach y Apple Watch":[],
+            "Smartbands":[],
+            "Correas, Protectores y Accesorios":[]
+        },
+
+        "Consolas y Videojuegos":{
+            "Consolas":{
+                "Nintendo":[],
+                "PlayStation":[],
+                "Xbox":[],
+                "Consolas Retro":[]
+            },
+            "Juegos para Consolas":[],
+            "Controles y Accesorios":[]
+        },
+
+        "Smart Home":{
+            "Iluminación Inteligente":[],
+            "Robots de Aseo y Limpieza":[],
+            "Asistentes de Voz":[],
+            "Enchufes e Interruptores":[],
+            "Productos para Mascotas":[],
+            "Cámaras y Kit de Seguridad":[],
+            "Cerraduras y Sensores":[],
+            "Accesorios Inteligentes":[]
+        },
+
+        "Accesorios de Computación":{
+            "Mouse y Teclados":[],
+            "Mousepads":[],
+            "Ventiladores, Bases y Soportes":[],
+            "Impresoras y suministros":{
+                "Impresoras":[],
+                "Suministros de impresoras":[]
+            },
+            "Routers y Repetidores Wifi":[],
+            "Cargadores y UPS":{
+                "Cargadores":[],
+                "Baterías y Pilas":[],
+                "UPS":[]
+            },
+            "Adaptadores y Cables":{
+                "Cables Datos / USB":[],
+                "Cables adaptadores de Audio":[],
+                "Cables adaptadores de Video":[],
+                "Cables de Red":[],
+                "Adaptadores USB":[],
+                "Adaptadores Bluetooth":[],
+                "Alargadores y Adaptador Triple":[]
+            }
+        },
+
+        "Componentes para Ordenadores":{
+            "Disco Duro, Pendrive y MicroSD":[],
+            "Memorias Ram":[],
+            "Procesadores":[],
+            "Tarjetas de Video":[],
+            "Placas Madre":[]
+        },
+
+        "Drones y Fotografía":{
+            "Drones":[],
+            "Go Pro y Cámaras de acción":[],
+            "Cámaras Profesionales y Retro":[],
+            "Cámaras de Video":[],
+            "Cámaras de Seguridad":[],
+            "Cámaras para Vehículos":[],
+            "Webcam":[],
+            "Accesorios Cámaras":[]
+        }
+    }},
+
+    {"Electrodomésticos": {
+        "Electrodomésticos de Cocina":{
+            "Freidoras de Aire":[],
+            "Cafeteras":[],
+            "Robots de Cocina":[],
+            "Sandwicheras y Wafleras":[],
+            "Parrillas y Planchas":[],
+            "Batidoras y Licuadoras":[],
+            "Exprimidores":[],
+            "Hervidores y Teteras":[],
+            "Selladoras al Vacío":[],
+            "Yogurteras":[],
+            "Máquinas de Palomitas":[],
+            "Tostadores":[]
+        },
+        "Refrigeración":{
+            "Refrigeradores":[],
+            "Side by Side":[],
+            "Freezers":[],
+            "Frigobares":[]
+        },
+        "Cocina y Hornos":{
+            "Cocinas y Encimeras":[],
+            "Hornos Empotrables y Eléctrico":[],
+            "Hornos Microondas":[],
+            "Campanas y Extractores":[]
+        },
+        "Ollas, Loza, Vasos y Cubiertos":{
+            "Ollas y Sartenes":[],
+            "Juego de Loza":[],
+            "Vasos y Copas":[],
+            "Cubiertos y Utensilios de Mesa":[],
+            "Organización de Cocina":[],
+            "Complementos":[]
+        },
+        "Lavado y Secado":{
+            "Lavadoras":[],
+            "Secadoras":[],
+            "Lavadora+Secadora":[],
+            "Lavavajillas":[],
+            "Planchas y sistemas de planchado":[]
+        },
+        "Calefacción del Hogar":{
+            "Estufas":[],
+            "Calefactores":[],
+            "Calientacamas":[],
+            "Aire Acondicionado":[],
+            "Ventiladores":[],
+            "Calefont":[]
+        },
+        "Aspiradoras":[],
+        "Pequeños electrodomésticos":[],
+        "Máquinas de Coser":[]
+    }},
+
+    {"Decohogar": {
+        "Muebles para el Hogar":{
+            "Closet, Veladores y Armarios":[],
+            "Racks y Estantes":[],
+            "Muebles de Oficina y Escritorios":[],
+            "Muebles de Cocina":[],
+            "Muebles de Baño":[],
+            "Mobiliario para bebés y niños pequeños":[],
+            "Muebles de Oficina":[]
+        },
+        "Decoración":{
+            "Alfombras y Bajadas de Cama":[],
+            "Espejos":[],
+            "Almohadas, Cojines y Fundas":[],
+            "Relojes":[],
+            "Artículos de Decoración":[],
+            "Dispensadores":[]
+        },
+        "Camas, Colchones y Accesorios":{
+            "Camas":[],
+            "Camarotes":[],
+            "Camas para Niños y Cunas":[],
+            "Colchones":[],
+            "Respaldos":[],
+            "Ropa de Cama":[],
+            "Ropa de Cuna":[]
+        },
+        "Mesas y Comedores":[],
+        "Terraza y Jardín":{
+            "Muebles de Terraza y Balcón":[],
+            "Artículos de Jardinería":[],
+            "Motosierras y Podadoras":[],
+            "Corta Césped y Orilladoras":[],
+            "Maquinaria de jardinería":[],
+            "Tractores para Césped":[],
+            "Artículos para Cortar Césped":[]
+        },
+        "Productos para el Hogar":{
+            "Organizadores para el Hogar":[],
+            "Otros Electrodomésticos":[],
+            "Accesorios para el baño":[],
+            "Basureros":[],
+            "Deshodorante ambiental":[]
+        },
+        "Living":{
+            "Poltronas":[],
+            "Sillones":[],
+            "Sillas":[],
+            "Banquetas y Pouf":[]
+        },
+        "Iluminación":{
+            "Lámparas":[],
+            "Focos":[],
+            "Ampolletas":[]
+        },
+        "Mobiliario para el Hogar":[]
+    }},
+
+    {"Ropa, Vestuario y Calzado": {
+        "Prendas de Vestir":{
+            "Tops":[],
+            "Blusas":[],
+            "Poleras":[],
+            "Camisas":[],
+            "Polerones":[],
+            "Parkas, Chaquetas y Abrigos":[],
+            "Trajes y Ternos":[],
+            "Pantalones, Jeans y Buzos":[],
+            "Enteritos y Jardineras":[],
+            "Vestidos":[],
+            "Faldas":[],
+            "Shorts":[],
+            "Trajes de Baño":[],
+            "Ropa Deportiva":[],
+            "Ropa para Niños y Bebés":[],
+            "Ropa de abrigo":[],
+            "Ropa para dormir y para estar en casa":[]
+        },
+        "Accesorios":{
+            "Relojes Análogos y Digitales":[],
+            "Joyas":[],
+            "Lentes de Sol":[],
+            "Lentes Ópticos":[],
+            "Carteras":[],
+            "Billeteras":[],
+            "Gorros y Jockey":[],
+            "Bufandas, Pañuelos y Bandanas":[],
+            "Guantes y Mitones":[],
+            "Cinturones":[],
+            "Corbatas y Corbatines":[],
+            "Paraguas":[],
+            "Llaveros":[]
+        },
+        "Calzado Femenino y Masculino":{
+            "Calzado Mujer":[],
+            "Calzado Hombre":[],
+            "Calzado Niña":[],
+            "Calzado Niño":[],
+            "Accesorios para Zapatos":[]
+        },
+        "Ropa Interior y Pijamas":{
+            "Ropa interior y Calcetines":[],
+            "Pijamas":[]
+        }
+    }},
+
+    {"Salud y Belleza": {
+        "Cuidado personal":{
+            "Afeitado y arreglo personal":[],
+            "Cosméticos":[],
+            "Cuidado bucal":[],
+            "Cuidado capilar":[],
+            "Masaje y relajación":[],
+            "Productos sanitarios femeninos":[],
+            "Alisadores y Cepillos eléctricos":[]
+        },
+        "Ortopedia":[],
+        "Insumos médicos":[],
+        "Vitaminas y suplementos":[]
+    }},
+
+    {"Deportes y Aire Libre": {
+        "Actividades al aire libre":{
+            "Camping y senderismo":[],
+            "Ciclismo":{
+                "Accesorios para bicicletas":[],
+                "Bicicletas":[]
+            },
+            "Deportes acuáticos y navegación deportiva":[],
+            "Patines":[],
+            "Pesca":[],
+            "Skateboard y snowboard":[],
+            "Scooters":[]
+        },
+        "Boxeo y artes marciales":[],
+        "Fútbol":[],
+        "Rugby":[],
+        "Fitness y musculación":{
+            "Aparatos de musculación":[],
+            "Cardio":[],
+            "Yoga y pilates":[]
+        },
+        "Indumentaria Moto Cross/Enduro":[],
+        "Tenis y Padel":[],
+        "Basquetbol":[],
+        "Termos, mugs y botellas":[],
+        "Voleibol y Handball":[]
+    }},
+
+    {"Supermercado": {
+        "Bebidas y licores":[],
+        "Carnes y pescados":[],
+        "Frutas y verduras":[],
+        "Frescos y lácteos":[],
+        "Congelados":[],
+        "Despensa":[],
+        "Panaderia y pastelería":[],
+        "Limpieza y aseo":[],
+        "Cotillón y festividades":[],
+        "Disfraces":[]
+    }},
+
+    {"Construcción y Ferretería": {
+        "Industrial":{
+            "Equipamiento industrial":[],
+            "Productos químicos":[]
+        },
+        "Accesorios de Construcción":{
+            "Cadenas, alambre y cuerda":[]
+        },
+        "Seguridad y prevención":[],
+        "Medición":[],
+        "Herramientas":{
+            "Alicates":[],
+            "Clavadoras y grapadoras":[],
+            "Destornilladores":[],
+            "Soldadoras":[],
+            "Fresadoras":[],
+            "Esmeriles":[],
+            "Otras herramientas":[],
+            "Herramientas de pintura":[],
+            "Lijadoras":[],
+            "Dados y llaves":[],
+            "Martillos y mazos":[],
+            "Pulidoras":[],
+            "Sierras":[],
+            "Sopletes":[],
+            "Taladros":[],
+            "Hidrolavadoras":[],
+            "Tornos":[],
+            "Escaleras":[],
+            "Baterías y Cargadores":[],
+            "Motores y generadores":[]
+        },
+        "Candados":[],
+        "Materiales de construcción":[],
+        "Suministros eléctricos":{
+            "Cables eléctricos":[]
+        },
+        "Control de Acceso y Seguridad":[],
+        "Puertas y ventanas":[],
+        "Plomería":[]
+    }},
+
+    {"Bebés y Niños Pequeños": {
+        "Baño de bebés":[],
+        "Juguetes y actividades para bebés":{
+            "Mecedoras y sillas para bebés":[]
+        },
+        "Lactancia y alimentación":[],
+        "Pañales e higiene":{
+            "Pañales":[],
+            "Higiene y Salud":[]
+        },
+        "Seguridad":[],
+        "Salud del bebé":[],
+        "Transporte de bebés":{
+            "Coches":[],
+            "Paseo y aire libre":[],
+            "Sillas para autos":[]
+        },
+        "Monitores para bebé":[]
+    }},
+
+    {"Juguetería y Juegos de Mesa": {
+        "Juegos de Exterior":[],
+        "Juegos":[],
+        "Juguetes":{
+            "Armas y artilugios de juguete":[],
+            "Juguetes didácticos":[],
+            "Juguetes musicales":[],
+            "Muñecas, parques infantiles y figuras de juguete":[],
+            "Robots de juguetes":[],
+            "Vehículos para jugar":[]
+        }
+    }},
+
+    {"Productos para Mascotas": {
+        "Alimento Mascotas":[],
+        "Otros Productos para Mascotas": []
+    }},
+
+    {"Instrumentos Musicales": {
+        "Instrumentos de cuerda":[],
+        "Instrumentos de viento":[],
+        "Instrumentos electrónicos":[],
+        "Instrumentos de percusión":[]
+    }},
+
+    {"Vehículos y Recambios":{
+        "Piezas y accesorios para vehículos":[],
+        "Neumáticos":[],
+        "Vehículos":[]
+    }},
+
+    {"Maletas, Mochilas y Bolsos":{
+        "Maletas":[],
+        "Mochilas":[],
+        "Bolsos, maletines y bananos":[],
+        "Bolsas y carrito para compras":[]
+    }},
+
+    {"Oficina y Papelería":{
+        "Oficina y escolares":[],
+        "Manualidades":[]
+    }},
+
+    {"Servicios":[]},
+
+    {"Otros":[]}
+    
+]
+
+
+
