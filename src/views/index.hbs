@@ -8,7 +8,12 @@
 
 <body>
     <header>
+        {{#if autenticacion}}
+        {{> navuser}}
+        {{else}}
         {{> nav}}
+        {{/if}}
+
     </header>
     <main>
         <div class="card-section">        

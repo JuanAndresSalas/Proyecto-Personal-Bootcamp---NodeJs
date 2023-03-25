@@ -1,5 +1,12 @@
 [
     {
+        "id": 3,
+        "nombre": "Pamela",
+        "apellido": "Alvarez",
+        "correo": "pamela.alvarez@outlook.com",
+        "password": "123456"
+    },
+    {
         "id": 1,
         "nombre": "Juan",
         "apellido": "Salas",
@@ -12,12 +19,6 @@
         "apellido": "Alvarado",
         "correo": "andre.alvarado@outlook.com",
         "password": "12345"
-    },
-    {
-        "id": 3,
-        "nombre": "Pamela",
-        "apellido": "Alvarez",
-        "correo": "pamela.alvarez@outlook.com",
-        "password": "123456"
     }
+    
 ]

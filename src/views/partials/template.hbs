@@ -8,12 +8,19 @@
 
 <body>
     <header>
-        {{> nav}}
+        {{#if autenticacion}}
+            {{> navuser}}
+        {{else}}
+            {{> nav}}
+        {{/if}}
     </header>
 
     {{> @partial-block}}
 
     {{> footer}}
 </body>
-{{> scripts}}
+<div>
+    {{> scripts}}
+</div>
+
 

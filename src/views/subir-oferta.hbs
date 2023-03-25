@@ -1,34 +1,36 @@
+
+
 {{#> template}}
 
 
-    <main  id="main-subir">
-        <div class="card" style="width: 30rem;">
-            <div class="card-img-top" >
-                <img src="/img/logo.jpg" alt="Imagen no Disponible" id="vistaPrevia" style="height: 20rem; width:25rem">
-            </div>
-            <div class="card-body">
-                <form id="formSubir" action="oferta-nueva">
-                    <div class="mb-3">
-                        <label for="imagen" class="form-label">Imagen</label>
-                        <input type="file" class="form-control"  id="imagen" name="imagen">
-                    </div>
-                    <div class="mb-3">
-                        <label for="lugar-url" class="form-label">Lugar o URL</label>
-                        <input type="text" class="form-control" id="lugar" name="lugar-url" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="precio" class="form-label">Precio</label>
-                        <input type="number" min="0" class="form-control" id="precio" name="precio" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="descripcion">Descripción</label>
-                        <input type="text" class="form-control" id="descripcion" name="descripcion" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary" id="btn-subir">Subir</button>
-                </form>
-            </div>
+<main  id="main-subir">
+    <div class="card" style="width: 30rem;">
+        <div class="card-img-top" >
+            <img src="/img/logo.jpg" alt="Imagen no Disponible" id="vistaPrevia" style="height: 20rem; width:25rem">
         </div>
-    </main>
+        <div class="card-body">
+            <form id="formSubir" action="oferta-nueva">
+                <div class="mb-3">
+                    <label for="imagen" class="form-label">Imagen</label>
+                    <input type="file" class="form-control"  id="imagen" name="imagen">
+                </div>
+                <div class="mb-3">
+                    <label for="lugar-url" class="form-label">Lugar o URL</label>
+                    <input type="text" class="form-control" id="lugar" name="lugar-url" required>
+                </div>
+                <div class="mb-3">
+                    <label for="precio" class="form-label">Precio</label>
+                    <input type="number" min="0" class="form-control" id="precio" name="precio" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="descripcion">Descripción</label>
+                    <input type="text" class="form-control" id="descripcion" name="descripcion" required>
+                </div>
+                <button type="submit" class="btn btn-primary" id="btn-subir">Subir</button>
+            </form>
+        </div>
+    </div>
+</main>
 
 
 {{/template}}
