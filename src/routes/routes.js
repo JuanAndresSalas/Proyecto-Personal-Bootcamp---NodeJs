@@ -17,6 +17,8 @@ const rutaUsuarios = "data/usuarios.json" // Ruta a json con los usuarios "regis
 const usuarios = await leerArchivo(rutaUsuarios) //Lectura y asignación json a variable usuarios
 //Variable
 let autenticacion = false;
+
+
 //Middleware
 
 //configuracion de bodyParser
@@ -27,10 +29,12 @@ router.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:
 router.use(cookieParser("secretKey")) //El string puede ser cualquier texto
 
 //Configuración session
+
 router.use(session({
     secret:"secretKey",
     saveUninitialized: true, 
     resave:true
+
 }))
 
 //Configuración passport
@@ -75,6 +79,21 @@ router.get("/", (req,res,next) =>{
 router.get("/login", (req, res) =>{
     res.render("login")
 })
+
+router.get("/registro", (req,res,next) =>{   
+                            if(req.isAuthenticated()){ //Si ya está autenticado seguira al siguiente parámetro que ingresemos a router.get()
+                                autenticacion = true
+                                return next()
+                            }else{
+                                autenticacion = false
+                                res.render("registro")
+                            }
+                        },
+                        (req, res) =>{
+                            res.render("index",{autenticacion})
+                            
+                        }
+)
 
 router.get("/index", (req,res,next) =>{ 
                             
@@ -145,7 +164,7 @@ router.get('/logout', function(req, res, next){
       if (err) { return next(err); }
       res.redirect('/');
     });
-  });
+});
 
 
 export default router //Exportar el contenido de este archivo
