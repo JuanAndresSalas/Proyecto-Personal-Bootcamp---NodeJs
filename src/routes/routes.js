@@ -95,6 +95,26 @@ router.get("/registro", (req,res,next) =>{
                         }
 )
 
+router.post("/formregistro", body("correo").isEmail().notEmpty(),
+                             body("nombre").isString().notEmpty(),
+                             body("apellido").isString().notEmpty(),
+                             body("apellido").isString().notEmpty(),
+                             body("password").isString().notEmpty(),
+                             (req,res,next) =>{   
+                                if(req.isAuthenticated()){
+                                    autenticacion = false
+                                    res.render("index")
+                                }else{
+                                    autenticacion = true
+                                    return next()
+                                }
+                            },(req, res) =>{
+                                console.log(req.body)
+                            }
+
+
+)
+
 router.get("/index", (req,res,next) =>{ 
                             
                             if(req.isAuthenticated()){ //Si ya está autenticado seguira al siguiente parámetro que ingresemos a router.get()

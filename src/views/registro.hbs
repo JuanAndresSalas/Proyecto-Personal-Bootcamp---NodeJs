@@ -1,23 +1,23 @@
 {{#> template}}
 
-<main>
-    <form style="width: 20rem;">
+<main id="main-registro">
+    <form style="width: 20rem;" action="formregistro" method="post">
         <div class="mb-3">
             <label for="correo" class="form-label">Correo electrónico</label>
-            <input type="email" class="form-control" id="correo" aria-describedby="emailHelp">
+            <input type="email" class="form-control" id="correo" name="correo" aria-describedby="emailHelp" required>
             <div id="emailHelp" class="form-text">Nunca compartiremos su correo electrónico con nadie más.</div>
         </div>
         <div class="mb-3 ">
             <label class="form-label" for="nombre">Nombre</label>
-            <input type="text" class="form-control" id="nombre" name="nombre">
+            <input type="text" class="form-control" id="nombre" name="nombre" required>
         </div>
         <div class="mb-3 ">
             <label class="form-label" for="apellido">Apellidos</label>
-            <input type="text" class="form-control" id="apellido" name="apellido">
+            <input type="text" class="form-control" id="apellido" name="apellido" required>
         </div>
         <div class="mb-3">
             <label for="password" class="form-label">Contraseña</label>
-            <input type="password" class="form-control" id="password" name="password">
+            <input type="password" class="form-control" id="password" name="password" required>
         </div>
         
         <button type="submit" class="btn btn-primary">Registrarse</button>

@@ -9,7 +9,7 @@
     width: 100%;
 }
 
-#main-subir, #main-login{
+#main-subir, #main-login, #main-registro{
     display: flex;
     justify-content: center;
     flex-direction: column;
