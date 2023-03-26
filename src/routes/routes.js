@@ -109,7 +109,35 @@ router.post("/formregistro", body("correo").isEmail().notEmpty(),
                                     return next()
                                 }
                             },(req, res) =>{
-                                console.log(req.body)
+                                let comprobacion = usuarios.find(usuario => usuario.correo == req.body.correo)
+                                
+                                if(comprobacion){
+                                    res.send("<script>alert('Usuario ya está registrado');window.location.href = 'http://localhost:3000/registro'</script>")
+
+                                }else{
+
+                                    let arregloID = usuarios.map(usuario => usuario.id)
+                                    arregloID.sort((a,b) => b - a)
+                                    let nuevoUsuario ={
+                                        "id": arregloID[0] + 1,
+                                        "nombre": req.body.nombre,
+                                        "apellido": req.body.apellido,
+                                        "correo": req.body.correo,
+                                        "password": req.body.password
+                                    }
+                                    usuarios.push(nuevoUsuario)
+
+                                    fs.writeFile("data/usuarios.json", JSON.stringify(usuarios), (err) =>{
+                                        if(err){
+                                            console.log("ERROR: ", err)
+                                        }else{
+                                            res.send("<script>alert('Usuario registrado con éxito');window.location.href = 'http://localhost:3000/index'</script>")
+                                        }
+                                    } )
+
+                                }
+                                
+                                 
                             }
 
 
