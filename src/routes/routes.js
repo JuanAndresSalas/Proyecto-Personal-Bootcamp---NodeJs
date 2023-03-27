@@ -15,6 +15,7 @@ const router = Router()
 const PassPortLocal = PassportLocal.Strategy //Middleware usado para crear una estrategia de autenticación
 const rutaUsuarios = "data/usuarios.json" // Ruta a json con los usuarios "registrados"
 const usuarios = await leerArchivo(rutaUsuarios) //Lectura y asignación json a variable usuarios
+let nombre;
 //Variable
 let autenticacion = false;
 
@@ -46,6 +47,7 @@ passport.use(new PassPortLocal(function(username,password,done){
     for (let index = 0; index < usuarios.length; index++) {
         let element = usuarios[index];
         if(username == element.correo && password == element.password){
+           
             return done(null,{id:element.id, name:element.nombre})
         }
     }
@@ -71,7 +73,8 @@ router.get("/", (req,res,next) =>{
     }
 },
  (req, res) =>{
-    res.render("index",{autenticacion})
+    res.render("index",{autenticacion},nombre)
+    
     
 })
 
@@ -90,7 +93,7 @@ router.get("/registro", (req,res,next) =>{
                             }
                         },
                         (req, res) =>{
-                            res.render("index",{autenticacion})
+                            res.render("index",{autenticacion,nombre})
                             
                         }
 )
@@ -144,7 +147,6 @@ router.post("/formregistro", body("correo").isEmail().notEmpty(),
 )
 
 router.get("/index", (req,res,next) =>{ 
-                            
                             if(req.isAuthenticated()){ //Si ya está autenticado seguira al siguiente parámetro que ingresemos a router.get()
                                 autenticacion = true
                                 return next()
@@ -154,14 +156,22 @@ router.get("/index", (req,res,next) =>{
                             }
                         },
                          (req, res) =>{
-                            res.render("index",{autenticacion})
+                            res.render("index",{autenticacion,nombre})
                             
                         }
 )
 
 /*Coprobación de login, usando passport.authenticate mediante la estrategia "local" creada anteriormente,
 en caso de éxito dirije  a "index", en caso de fallo al autenticar dirije a "login" */
-router.post("/ingreso",passport.authenticate("local",{successRedirect: "/index",failureRedirect: "/login"}))
+router.post("/ingreso",passport.authenticate("local",{failureRedirect: "/login"}),
+                        function(req, res){
+                            let nombreUsuario = usuarios.find(usuario => usuario.correo == req.body.username)
+                            req.session.userName = nombreUsuario
+                            autenticacion = true
+                             nombre = req.session.userName.nombre
+                            res.render("index",{autenticacion,nombre})
+                        }                  
+)
 
 /*A esta ruta solo pueden acceder los usuarios logeados, 
 esto se logra usando el isAuthenticated() de passport como parámetro del router.get()*/
@@ -176,7 +186,7 @@ router.get("/subir-oferta", (req,res,next) =>{
                                 }
                             },
                             (req, res) =>{ //Con las comprobaciones anteriores exitosas pasa a renderizar la vista "subir-oferta"
-                                res.render("subir-oferta",{autenticacion})
+                                res.render("subir-oferta",{autenticacion,nombre})
                             }
 )
 
@@ -210,6 +220,7 @@ router.post("/oferta-nueva",
 router.get('/logout', function(req, res, next){
     req.logout(function(err) {
       if (err) { return next(err); }
+      nombre = undefined
       res.redirect('/');
     });
 });

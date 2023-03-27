@@ -23,7 +23,11 @@
                 <li class="nav-item">
                     <a class="nav-link active" href="/logout">Salir</a>
                 </li>
-
+                {{#if nombre}}
+                <li class="nav-item">
+                    <a class="nav-link disabled" >Hola {{nombre}}</a>
+                </li>
+               {{/if}}
 
             </ul>
         </div>
