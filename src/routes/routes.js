@@ -9,24 +9,21 @@ import cookieParser from "cookie-parser";
 import fs from "fs"
 import mysql from "mysql"
 import dotenv from "dotenv" //dotenv para proteger los datos de la base de datos
-import {leerArchivo, obtenerUsuario} from "../functions/functions.js" //Función para leer archivos almacenados en local
+
 
 //Constantes--------------------------------------------------------------------------------
 const router = Router()
 const PassPortLocal = PassportLocal.Strategy //Middleware usado para crear una estrategia de autenticación
-
-const rutaCategorias = "data/categorias.json"
-
-const categorias = await leerArchivo(rutaCategorias)
-
+//Variables --------------------------------------------------------------------------------
 let nombre;
-//Variable----------------------------------------------------------------------------------
+
 let autenticacion = false;
 
 
+//Configuracion de dotenv ------------------------------------------------------------------
+dotenv.config() 
 
-dotenv.config() //Configuracion de dotenv
-
+//Conexión base de datos -------------------------------------------------------------------
 const conexion = mysql.createConnection({
     host: process.env.DB_HOST,
     database: process.env.DB,
@@ -34,7 +31,6 @@ const conexion = mysql.createConnection({
     password: process.env.DB_PASS
 });
 
-//Conexión con Base de datos ---------------------------------------------------------------
 conexion.connect((error) =>{
    if(error){
        throw error
@@ -42,9 +38,6 @@ conexion.connect((error) =>{
        console.log("conexion exitosa")
    }
 })
-
-
-
 
 //Middleware -------------------------------------------------------------------------------
 
@@ -68,7 +61,7 @@ router.use(session({
 router.use(passport.initialize())
 router.use(passport.session())
 
-//Creación de la estrategia a usar para la validación de usuarios---------------------------
+//Creación de la estrategia a usar para la validación de usuarios --------------------------
 passport.use(new PassPortLocal(function(username,password,done){
     let usuario
     conexion.query(`SELECT correo, contrasena,idusuario,nombre from usuario where correo LIKE '${username}'`, (error,res,fields) =>{
@@ -83,7 +76,6 @@ passport.use(new PassPortLocal(function(username,password,done){
             return done(null,false)
         }
     })
-    
     
 }))
 
@@ -134,7 +126,6 @@ router.get("/registro", (req,res,next) =>{
 router.post("/formregistro", body("correo").isEmail().notEmpty(),
                              body("nombre").isString().notEmpty(),
                              body("apellido").isString().notEmpty(),
-                             body("apellido").isString().notEmpty(),
                              body("password").isString().notEmpty(),
                              (req,res,next) =>{   
                                 if(req.isAuthenticated()){
@@ -144,42 +135,35 @@ router.post("/formregistro", body("correo").isEmail().notEmpty(),
                                     autenticacion = true
                                     return next()
                                 }
-                            },(req, res) =>{
-                                let comprobacion = usuarios.find(usuario => usuario.correo == req.body.correo)
+                            },
+                            (request, res) =>{     
+                                let correo = request.body.correo;
+                                let nombre = request.body.nombre;
+                                let apellido = request.body.apellido
+                                let contra = request.body.password;
                                 
-                                if(comprobacion){
-                                    res.send("<script>alert('Usuario ya está registrado');window.location.href = 'http://localhost:3000/registro'</script>")
-
-                                }else{
-
-                                    let arregloID = usuarios.map(usuario => usuario.id)
-                                    arregloID.sort((a,b) => b - a)
-                                    let nuevoUsuario ={
-                                        "id": arregloID[0] + 1,
-                                        "nombre": req.body.nombre,
-                                        "apellido": req.body.apellido,
-                                        "correo": req.body.correo,
-                                        "password": req.body.password
-                                    }
-
-
-                                    
-                                    /*usuarios.push(nuevoUsuario)
-
-                                    fs.writeFile("data/usuarios.json", JSON.stringify(usuarios), (err) =>{
-                                        if(err){
-                                            console.log("ERROR: ", err)
+                                conexion.query(`SELECT * from usuario where correo LIKE '${correo}'`, (error,response,fields) =>{
+                                   if(error){
+                                        throw error
+                                    }else{
+                                        let usuario = response
+                                        if(usuario.length > 0){
+                                            res.send("<script>alert('Correo ya se encuentra registrado');window.location.href = 'http://localhost:3000/registro'</script>")
                                         }else{
-                                            res.send("<script>alert('Usuario registrado con éxito');window.location.href = 'http://localhost:3000/index'</script>")
-                                        }
-                                    } )*/
-
-                                }
+                                            conexion.query(`INSERT INTO usuario(nombre,apellido,correo,contrasena)
+                                                            VALUES ('${nombre}','${apellido}','${correo}','${contra}');`, (error,response,fields) =>{
+                                                                if(error){
+                                                                    throw error
+                                                                }else{
+                                                                    res.send("<script>alert('Usuario registrado con éxito');window.location.href = 'http://localhost:3000/index'</script>")
+                                                                }
+                                            })
+                                            
+                                        }  
+                                    }
+                                })
                                 
-                                 
                             }
-
-
 )
 
 router.get("/index", (req,res,next) =>{ 
@@ -257,6 +241,7 @@ router.get('/logout', function(req, res, next){
       nombre = undefined
       res.redirect('/');
     });
+    
 });
 
 

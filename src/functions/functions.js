@@ -9,13 +9,4 @@
     return await JSON.parse(data);
 }
 
-export function obtenerUsuario(username){
-    let usuario = conexion.query(`SELECT correo, contrasena,idusuario,nombre from usuario where correo LIKE '${username}'`, (error,res,fields) =>{
-        if(error){
-            throw error
-        }else{
-            return res
-        }
-    })
-    
-}
+
