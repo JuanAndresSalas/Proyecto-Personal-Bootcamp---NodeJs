@@ -1,4 +1,4 @@
-//Importación
+//Importación---------------------------------------------------------
 import { Router } from "express";
 import bodyParser from "body-parser";
 import { body, validationResult } from 'express-validator'; 
@@ -7,29 +7,55 @@ import PassportLocal from "passport-local"
 import session from "express-session"
 import cookieParser from "cookie-parser";
 import fs from "fs"
+import mysql from "mysql"
+import dotenv from "dotenv" //dotenv para proteger los datos de la base de datos
+import {leerArchivo, obtenerUsuario} from "../functions/functions.js" //Función para leer archivos almacenados en local
 
-import {leerArchivo} from "../functions/functions.js" //Función para leer archivos almacenados en local
-
-//Constantes
+//Constantes--------------------------------------------------------------------------------
 const router = Router()
 const PassPortLocal = PassportLocal.Strategy //Middleware usado para crear una estrategia de autenticación
-const rutaUsuarios = "data/usuarios.json" // Ruta a json con los usuarios "registrados"
-const usuarios = await leerArchivo(rutaUsuarios) //Lectura y asignación json a variable usuarios
+
+const rutaCategorias = "data/categorias.json"
+
+const categorias = await leerArchivo(rutaCategorias)
+
 let nombre;
-//Variable
+//Variable----------------------------------------------------------------------------------
 let autenticacion = false;
 
 
-//Middleware
+
+dotenv.config() //Configuracion de dotenv
+
+const conexion = mysql.createConnection({
+    host: process.env.DB_HOST,
+    database: process.env.DB,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS
+});
+
+//Conexión con Base de datos ---------------------------------------------------------------
+conexion.connect((error) =>{
+   if(error){
+       throw error
+   }else{
+       console.log("conexion exitosa")
+   }
+})
+
+
+
+
+//Middleware -------------------------------------------------------------------------------
 
 //configuracion de bodyParser
 router.use(bodyParser.json({limit: "50mb"}));  //Por el tamaño del string de la imagen se aumenta la clave "limit"
 router.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}))
 
-//Configuración cookieParser
+//Configuración cookieParser ---------------------------------------------------------------
 router.use(cookieParser("secretKey")) //El string puede ser cualquier texto
 
-//Configuración session
+//Configuración session --------------------------------------------------------------------
 
 router.use(session({
     secret:"secretKey",
@@ -38,20 +64,27 @@ router.use(session({
 
 }))
 
-//Configuración passport
+//Configuración passport -------------------------------------------------------------------
 router.use(passport.initialize())
 router.use(passport.session())
 
-//Creación de la estrategia a usar para la validación de usuarios
+//Creación de la estrategia a usar para la validación de usuarios---------------------------
 passport.use(new PassPortLocal(function(username,password,done){
-    for (let index = 0; index < usuarios.length; index++) {
-        let element = usuarios[index];
-        if(username == element.correo && password == element.password){
-           
-            return done(null,{id:element.id, name:element.nombre})
+    let usuario
+    conexion.query(`SELECT correo, contrasena,idusuario,nombre from usuario where correo LIKE '${username}'`, (error,res,fields) =>{
+        if(error){
+            throw error
+        }else{
+            usuario = res[0]
+            if(username == usuario.correo && password == usuario.contrasena){
+                nombre = usuario.nombre
+                return done(null,{id:usuario.idusuario, name:usuario.nombre})
+            }
+            return done(null,false)
         }
-    }
-    return done(null,false)
+    })
+    
+    
 }))
 
 passport.serializeUser(function(user, done) {
@@ -62,7 +95,7 @@ passport.deserializeUser(function(id, done) {
     done(null,{id})
 });
 
-//Rutas
+//Rutas ------------------------------------------------------------------------------------
 router.get("/", (req,res,next) =>{                  
     if(req.isAuthenticated()){ //Si ya está autenticado seguira al siguiente parámetro que ingresemos a router.get()
         autenticacion = true
@@ -128,7 +161,10 @@ router.post("/formregistro", body("correo").isEmail().notEmpty(),
                                         "correo": req.body.correo,
                                         "password": req.body.password
                                     }
-                                    usuarios.push(nuevoUsuario)
+
+
+                                    
+                                    /*usuarios.push(nuevoUsuario)
 
                                     fs.writeFile("data/usuarios.json", JSON.stringify(usuarios), (err) =>{
                                         if(err){
@@ -136,7 +172,7 @@ router.post("/formregistro", body("correo").isEmail().notEmpty(),
                                         }else{
                                             res.send("<script>alert('Usuario registrado con éxito');window.location.href = 'http://localhost:3000/index'</script>")
                                         }
-                                    } )
+                                    } )*/
 
                                 }
                                 
@@ -165,10 +201,7 @@ router.get("/index", (req,res,next) =>{
 en caso de éxito dirije  a "index", en caso de fallo al autenticar dirije a "login" */
 router.post("/ingreso",passport.authenticate("local",{failureRedirect: "/login"}),
                         function(req, res){
-                            let nombreUsuario = usuarios.find(usuario => usuario.correo == req.body.username)
-                            req.session.userName = nombreUsuario
                             autenticacion = true
-                             nombre = req.session.userName.nombre
                             res.render("index",{autenticacion,nombre})
                         }                  
 )
@@ -186,7 +219,7 @@ router.get("/subir-oferta", (req,res,next) =>{
                                 }
                             },
                             (req, res) =>{ //Con las comprobaciones anteriores exitosas pasa a renderizar la vista "subir-oferta"
-                                res.render("subir-oferta",{autenticacion,nombre})
+                                res.render("subir-oferta",{autenticacion,nombre,categorias})
                             }
 )
 
@@ -212,6 +245,7 @@ router.post("/oferta-nueva",
                                     let lugar = req.body.lugar
                                     let precio = req.body.precio
                                     let descripcion = req.body.descripcion
+                                    
                                 }
                             }
 )
@@ -225,5 +259,15 @@ router.get('/logout', function(req, res, next){
     });
 });
 
+
+router.get("*",  (req,res,next) =>{                
+        if(req.isAuthenticated()){ 
+            autenticacion = true
+            res.render("error",{autenticacion,nombre})
+        }else{
+            res.render("error") 
+        }
+    }
+)
 
 export default router //Exportar el contenido de este archivo

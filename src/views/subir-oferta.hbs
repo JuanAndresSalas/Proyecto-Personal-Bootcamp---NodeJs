@@ -22,6 +22,15 @@
                     <input type="number" min="0" class="form-control" id="precio" name="precio" required>
                 </div>
                 <div class="mb-3">
+                    <label for="categoria" class="form-label">Categoría</label>
+                    <input list="categorias" type="text" class="form-control" id="categoria" name="categoria" required>
+                    <datalist id="categorias">
+                        {{#each categorias}}
+                        <option value="{{this}}">
+                        {{/each}}
+                    </datalist>
+                </div>
+                <div class="mb-3">
                     <label class="form-label" for="descripcion">Descripción</label>
                     <input type="text" class="form-control" id="descripcion" name="descripcion" required>
                 </div>

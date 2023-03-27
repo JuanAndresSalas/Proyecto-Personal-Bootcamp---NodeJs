@@ -1,6 +1,8 @@
 //Importar express
 import express from "express"; 
 
+
+
 //Siguentes dos import son para configurar la ruta donde se guardan las views
 import {dirname, join} from "path"; //join sirve para concatenar el path con el nombre de la carpeta donde estan las views
 import {fileURLToPath} from "url";
