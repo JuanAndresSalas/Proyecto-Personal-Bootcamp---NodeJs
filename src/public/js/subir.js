@@ -7,6 +7,7 @@ const formularioSubida = document.getElementById("formSubir")
 const lugar = document.getElementById("lugar")
 const precio = document.getElementById("precio")
 const descripcion = document.getElementById("descripcion")
+const categoria = document.getElementById("categoria")
 
 
 //Mostrar imagen subida y tranformacion a base64
@@ -57,7 +58,11 @@ formularioSubida.addEventListener("submit", evento =>{
                     imagen: base64URL,
                     lugar: lugar.value,
                     precio: precio.value,
-                    descripcion: descripcion.value
+                    descripcion: descripcion.value,
+                    latitud: 0,
+                    longitud: 0,
+                    categoria: categoria.value
+
 
                 }
                 
@@ -67,5 +72,9 @@ formularioSubida.addEventListener("submit", evento =>{
         'Content-type' : 'application/json' 
         }, 
         body: JSON.stringify(info)
-  })
+    }).then(
+            alert("Oferta Guardada"),
+            location.reload()
+            )
+  
 })

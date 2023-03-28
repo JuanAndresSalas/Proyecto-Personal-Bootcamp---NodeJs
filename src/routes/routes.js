@@ -6,7 +6,6 @@ import passport from "passport";
 import PassportLocal from "passport-local"
 import session from "express-session"
 import cookieParser from "cookie-parser";
-import fs from "fs"
 import mysql from "mysql"
 import dotenv from "dotenv" //dotenv para proteger los datos de la base de datos
 
@@ -119,7 +118,7 @@ router.get("/index", (req,res,next) =>{
 
 //-------------------------------------------------------------- Registro -----------------------------------------------------------------------
 router.get("/registro", (req,res,next) =>{   
-                            if(req.isAuthenticated()){ //Si ya está autenticado seguira al siguiente parámetro que ingresemos a router.get()
+                            if(req.isAuthenticated()){
                                 autenticacion = true
                                 return next()
                             }else{
@@ -180,8 +179,8 @@ router.post("/formregistro", body("correo").isEmail().notEmpty(),
 router.get("/login", (req, res) =>{
     res.render("login")
 })
-/*Coprobación de login, usando passport.authenticate mediante la estrategia "local" creada anteriormente,
-en caso de éxito dirije  a "index", en caso de fallo al autenticar dirije a "login" */
+/*Comprobación de login, usando passport.authenticate mediante la estrategia "local" creada anteriormente,
+en caso de éxito dirige  a "index", en caso de fallo al autenticar dirige a "login" */
 router.post("/ingreso",passport.authenticate("local",{failureRedirect: "/login"}),
                         function(req, res){
                             autenticacion = true
@@ -192,7 +191,7 @@ router.post("/ingreso",passport.authenticate("local",{failureRedirect: "/login"}
 //-------------------------------------------------------------- Subir oferta -------------------------------------------------------------------
 
 /*A esta ruta solo pueden acceder los usuarios logeados, 
-esto se logra usando el isAuthenticated() de passport como parámetro del router.get()*/
+esto se logra usando  isAuthenticated() de passport como parámetro del router.get()*/
 router.get("/subir-oferta", (req,res,next) =>{  
                                 
                                 if(req.isAuthenticated()){ //Si ya está autenticado seguira al siguiente parámetro que ingresemos a router.get()
@@ -222,20 +221,50 @@ router.post("/oferta-nueva",
                             body("imagen").isString(),
                             body("descripcion").isString().notEmpty(),
                             body("lugar").notEmpty().isString(),
-                            body("latitud").isNumeric().notEmpty(),
-                            body("longitud").isNumeric().notEmpty(),
-                            (req, res) =>{
+                            body("latitud").notEmpty(),
+                            body("longitud").notEmpty(),
+                            body("categoria").isString().notEmpty(),
+                            (req, respuesta) =>{
                                 let error = validationResult(req)
                                 if ( !error.isEmpty()) {
                                     console.log(error.array());
-                                    return res.json({error: error.array() });
+                                    return respuesta.json({error: error.array() });
                                 }else{
-                                    let archivoOfertas = JSON.parse(fs.readFileSync("./BD/ofertas.json"))
+                                    
                                     let imagen = req.body.imagen
                                     let lugar = req.body.lugar
                                     let precio = req.body.precio
                                     let descripcion = req.body.descripcion
-                                    
+                                    let categoria = req.body.categoria
+                                    let latitud = req.body.latitud
+                                    let longitud = req.body.longitud
+                                    let idsubcategoria;
+                                    let idusuario;
+                                    conexion.query(`SELECT idsubcategoria AS id,nombre
+                                                    FROM subcategoria
+                                                    WHERE nombre LIKE '${categoria}'
+                                                    UNION ALL
+                                                    SELECT idusuario,nombre
+                                                    FROM usuario
+                                                    WHERE nombre LIKE '${nombre}'`, (error,response,fields) =>{
+                                        if(error){
+                                             throw error
+                                        }else{
+                                            
+                                            idsubcategoria = response[0].id
+                                            idusuario = response[1].id
+                                            conexion.query(`INSERT INTO oferta(precio,lugar,latitud,longitud,descripcion,imagen,subcategoria_idsubcategoria,usuario_idusuario) 
+                                                            VALUES (${precio},'${lugar}',${latitud},${longitud},'${descripcion}','${imagen}',${idsubcategoria},${idusuario});`,
+                                                            (error,respo,fields) =>{
+                                                                if(error){
+                                                                    throw error
+                                                                }else{
+                                                                    console.log("Oferta guardada")
+                                                                }
+                                                            }
+                                            )
+                                        }                                   
+                                    })  
                                 }
                             }
 )
