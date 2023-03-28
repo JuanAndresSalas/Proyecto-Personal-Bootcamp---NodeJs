@@ -1,4 +1,4 @@
-//Importación---------------------------------------------------------
+//-------------------------------------------------------------- Importación -------------------------------------------------------------------------------
 import { Router } from "express";
 import bodyParser from "body-parser";
 import { body, validationResult } from 'express-validator'; 
@@ -10,20 +10,18 @@ import fs from "fs"
 import mysql from "mysql"
 import dotenv from "dotenv" //dotenv para proteger los datos de la base de datos
 
-
-//Constantes--------------------------------------------------------------------------------
+//-------------------------------------------------------------- Constantes -------------------------------------------------------------------------------
 const router = Router()
-const PassPortLocal = PassportLocal.Strategy //Middleware usado para crear una estrategia de autenticación
-//Variables --------------------------------------------------------------------------------
-let nombre;
+const PassPortLocal = PassportLocal.Strategy //Middleware para crear la estrategia de autenticación
 
+//-------------------------------------------------------------- Variables --------------------------------------------------------------------------------
+let nombre;
 let autenticacion = false;
 
-
-//Configuracion de dotenv ------------------------------------------------------------------
+//------------------------------------------------------- Configuracion de dotenv ------------------------------------------------------------------
 dotenv.config() 
 
-//Conexión base de datos -------------------------------------------------------------------
+//------------------------------------------------------- Conexión base de datos -------------------------------------------------------------------
 const conexion = mysql.createConnection({
     host: process.env.DB_HOST,
     database: process.env.DB,
@@ -39,17 +37,16 @@ conexion.connect((error) =>{
    }
 })
 
-//Middleware -------------------------------------------------------------------------------
+//############################################################# MIDDLEWARE ########################################################################
 
-//configuracion de bodyParser
-router.use(bodyParser.json({limit: "50mb"}));  //Por el tamaño del string de la imagen se aumenta la clave "limit"
+//----------------------------------------------------- configuracion de bodyParser --------------------------------------------------------------
+router.use(bodyParser.json({limit: "50mb"}));  
 router.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}))
 
-//Configuración cookieParser ---------------------------------------------------------------
-router.use(cookieParser("secretKey")) //El string puede ser cualquier texto
+//-------------------------------------------------------- Configuración cookieParser ---------------------------------------------------------------
+router.use(cookieParser("secretKey"))
 
-//Configuración session --------------------------------------------------------------------
-
+// ------------------------------------------------------- Configuración session --------------------------------------------------------------------
 router.use(session({
     secret:"secretKey",
     saveUninitialized: true, 
@@ -57,11 +54,11 @@ router.use(session({
 
 }))
 
-//Configuración passport -------------------------------------------------------------------
+//---------------------------------------------------------Configuración passport -------------------------------------------------------------------
 router.use(passport.initialize())
 router.use(passport.session())
 
-//Creación de la estrategia a usar para la validación de usuarios --------------------------
+//----------------------------------------- Creación de la estrategia a usar para la validación de usuarios -------------------------------------------------
 passport.use(new PassPortLocal(function(username,password,done){
     let usuario
     conexion.query(`SELECT correo, contrasena,idusuario,nombre from usuario where correo LIKE '${username}'`, (error,res,fields) =>{
@@ -87,7 +84,9 @@ passport.deserializeUser(function(id, done) {
     done(null,{id})
 });
 
-//Rutas ------------------------------------------------------------------------------------
+//################################################################ RUTAS ########################################################################
+
+//-------------------------------------------------------------- Principal ----------------------------------------------------------------------
 router.get("/", (req,res,next) =>{                  
     if(req.isAuthenticated()){ //Si ya está autenticado seguira al siguiente parámetro que ingresemos a router.get()
         autenticacion = true
@@ -103,11 +102,22 @@ router.get("/", (req,res,next) =>{
     
 })
 
+router.get("/index", (req,res,next) =>{ 
+    if(req.isAuthenticated()){ //Si ya está autenticado seguira al siguiente parámetro que ingresemos a router.get()
+        autenticacion = true
+        return next()
+    }else{
+        autenticacion = false
+        return next()
+    }
+},
+ (req, res) =>{
+    res.render("index",{autenticacion,nombre})
+    
+}
+)
 
-router.get("/login", (req, res) =>{
-    res.render("login")
-})
-
+//-------------------------------------------------------------- Registro -----------------------------------------------------------------------
 router.get("/registro", (req,res,next) =>{   
                             if(req.isAuthenticated()){ //Si ya está autenticado seguira al siguiente parámetro que ingresemos a router.get()
                                 autenticacion = true
@@ -166,21 +176,10 @@ router.post("/formregistro", body("correo").isEmail().notEmpty(),
                             }
 )
 
-router.get("/index", (req,res,next) =>{ 
-                            if(req.isAuthenticated()){ //Si ya está autenticado seguira al siguiente parámetro que ingresemos a router.get()
-                                autenticacion = true
-                                return next()
-                            }else{
-                                autenticacion = false
-                                return next()
-                            }
-                        },
-                         (req, res) =>{
-                            res.render("index",{autenticacion,nombre})
-                            
-                        }
-)
-
+//---------------------------------------------------------------- Login ------------------------------------------------------------------------- 
+router.get("/login", (req, res) =>{
+    res.render("login")
+})
 /*Coprobación de login, usando passport.authenticate mediante la estrategia "local" creada anteriormente,
 en caso de éxito dirije  a "index", en caso de fallo al autenticar dirije a "login" */
 router.post("/ingreso",passport.authenticate("local",{failureRedirect: "/login"}),
@@ -190,9 +189,10 @@ router.post("/ingreso",passport.authenticate("local",{failureRedirect: "/login"}
                         }                  
 )
 
+//-------------------------------------------------------------- Subir oferta -------------------------------------------------------------------
+
 /*A esta ruta solo pueden acceder los usuarios logeados, 
 esto se logra usando el isAuthenticated() de passport como parámetro del router.get()*/
-
 router.get("/subir-oferta", (req,res,next) =>{  
                                 
                                 if(req.isAuthenticated()){ //Si ya está autenticado seguira al siguiente parámetro que ingresemos a router.get()
@@ -203,10 +203,16 @@ router.get("/subir-oferta", (req,res,next) =>{
                                 }
                             },
                             (req, res) =>{ //Con las comprobaciones anteriores exitosas pasa a renderizar la vista "subir-oferta"
-                                res.render("subir-oferta",{autenticacion,nombre,categorias})
+                                conexion.query(`SELECT nombre from subcategoria`, (error,response,fields) =>{
+                                    if(error){
+                                         throw error
+                                    }else{
+                                        let categorias = response.map(element => element.nombre)
+                                        res.render("subir-oferta",{autenticacion,nombre,categorias})
+                                    }
+                                 })                            
                             }
 )
-
 
 /*Recepción del formulario con action="oferta-nueva", validado mediante el uso de body de express-validator,
 body recibe como parámetro el name del input que enviamos al servidor y
@@ -234,8 +240,8 @@ router.post("/oferta-nueva",
                             }
 )
 
-//Terminar sesión de usuario
-router.get('/logout', function(req, res, next){
+//-------------------------------------------------------- Terminar sesión de usuario -------------------------------------------------------------
+router.get('/logout',(req, res, next) =>{
     req.logout(function(err) {
       if (err) { return next(err); }
       nombre = undefined
@@ -244,7 +250,7 @@ router.get('/logout', function(req, res, next){
     
 });
 
-
+//------------------------------------------------------------ Dirección Erronea ----------------------------------------------------------------
 router.get("*",  (req,res,next) =>{                
         if(req.isAuthenticated()){ 
             autenticacion = true
