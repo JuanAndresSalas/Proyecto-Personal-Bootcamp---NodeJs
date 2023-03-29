@@ -60,14 +60,14 @@ router.use(passport.session())
 //----------------------------------------- Creación de la estrategia para la validación de usuarios -------------------------------------------------
 passport.use(new PassPortLocal(function(username,password,done){
     let usuario
-    conexion.query(`SELECT correo, contrasena,idusuario,nombre from usuario where correo LIKE '${username}'`, (error,res,fields) =>{
+    conexion.query(`SELECT correo, contrasena,idusuario,nombre,apellido from usuario where correo LIKE '${username}'`, (error,res,fields) =>{
         if(error){
             throw error
         }else{
             usuario = res[0]
             if(username == usuario.correo && password == usuario.contrasena){
                 nombre = usuario.nombre
-                return done(null,{id:usuario.idusuario, name:usuario.nombre})
+                return done(null,{id:usuario.idusuario, name:usuario.nombre, correo:usuario.correo,apellido:usuario.apellido})
             }
             return done(null,false)
         }
@@ -76,11 +76,11 @@ passport.use(new PassPortLocal(function(username,password,done){
 }))
 
 passport.serializeUser(function(user, done) {
-    done(null, user.id);
+    done(null, user);
 });
 
-passport.deserializeUser(function(id, done) {
-    done(null,{id})
+passport.deserializeUser(function(user, done) {
+    done(null,user)
 });
 
 //################################################################ RUTAS ########################################################################
@@ -183,6 +183,7 @@ router.get("/login", (req, res) =>{
 en caso de éxito dirige  a "index", en caso de fallo al autenticar dirige a "login" */
 router.post("/ingreso",passport.authenticate("local",{failureRedirect: "/login"}),
                         function(req, res){
+                            nombre = req.session.passport.user.name
                             autenticacion = true
                             res.render("index",{autenticacion,nombre})
                         }                  
@@ -285,12 +286,41 @@ router.get("/que-es-ofertapp", (req,res,next) =>{
 )
 
 
+//-------------------------------------------------------- Página de contacto -------------------------------------------------------------
+
+router.get("/contacto",(req,res,next) =>{  
+                            if(req.isAuthenticated()){ 
+                                autenticacion = true
+                                let apellido= req.session.passport.user.apellido
+                                let correo = req.session.passport.user.correo
+                                res.render("contacto",{autenticacion,nombre,apellido,correo})
+                            }else{
+                                autenticacion = false 
+                                res.render("contacto",{autenticacion,nombre})
+                            }
+                        }
+)
+
+               
+router.post("/contacto",body("correo").isString().notEmpty(),
+                        body("nombre").isString().notEmpty(),
+                        body("mensaje").isString().notEmpty(),
+                        (req, res) =>{
+                            let error = validationResult(req)
+                            if ( !error.isEmpty()) {
+                                console.log(error.array());
+                                return res.json({error: error.array() });
+                                
+                            }else{
+                                res.send("<script>alert('Mensaje enviado!'); window.location.href = 'http://localhost:3000/index'</script>")
+                            }
+})
+
 //-------------------------------------------------------- Terminar sesión de usuario -------------------------------------------------------------
 router.get('/logout',(req, res, next) =>{
     req.logout(function(err) {
       if (err) { return next(err); }
-      nombre = undefined
-      res.redirect('/');
+      res.render('index');
     });
     
 });

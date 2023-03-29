@@ -74,7 +74,8 @@ formularioSubida.addEventListener("submit", evento =>{
         body: JSON.stringify(info)
     }).then(
             alert("Oferta Guardada"),
-            location.reload()
+            location.reload(),
+            
             )
   
 })

@@ -1,0 +1,43 @@
+{{#> template}}
+
+<main id="main-contacto">
+
+    <div class="card" style="width: 18rem;">
+        <h1>Contacto</h1>
+        <div class="card-body">
+            <form action="/contacto" method="post" id="form-contacto">     
+                    {{#if autenticacion}}
+                        <div class="mb-3">
+                            <label for="correo" class="form-label">Correo electrónico</label>
+                            <input type="email" class="form-control" id="correo" value="{{correo}}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" value="{{nombre}} {{apellido}}" required>
+                        </div>
+                    {{else}}
+                        <div class="mb-3">
+                            <label for="correo" class="form-label">Correo electrónico</label>
+                            <input type="email" class="form-control" id="correo" name="correo" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" required>
+                        </div>
+                    {{/if}}
+
+                <div class="mb-3">
+                    <label for="mensaje" class="form-label">Mensaje</label>
+                    <textarea class="form-control" id="mensaje" rows="5" placeholder="Ingresa tu mensaje" name="mensaje" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Enviar</button>
+            </form>
+        </div>
+    </div>
+
+
+
+
+</main>
+
+{{/template}}
