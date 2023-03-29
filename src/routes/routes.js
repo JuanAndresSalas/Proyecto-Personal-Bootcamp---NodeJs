@@ -32,7 +32,7 @@ conexion.connect((error) =>{
    if(error){
        throw error
    }else{
-       console.log("conexion exitosa")
+       console.log("Conectado con Base de Datos")
    }
 })
 
@@ -45,7 +45,7 @@ router.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:
 //-------------------------------------------------------- Configuración cookieParser ---------------------------------------------------------------
 router.use(cookieParser("secretKey"))
 
-// ------------------------------------------------------- Configuración session --------------------------------------------------------------------
+//-------------------------------------------------------- Configuración session --------------------------------------------------------------------
 router.use(session({
     secret:"secretKey",
     saveUninitialized: true, 
@@ -57,7 +57,7 @@ router.use(session({
 router.use(passport.initialize())
 router.use(passport.session())
 
-//----------------------------------------- Creación de la estrategia a usar para la validación de usuarios -------------------------------------------------
+//----------------------------------------- Creación de la estrategia para la validación de usuarios -------------------------------------------------
 passport.use(new PassPortLocal(function(username,password,done){
     let usuario
     conexion.query(`SELECT correo, contrasena,idusuario,nombre from usuario where correo LIKE '${username}'`, (error,res,fields) =>{
@@ -268,6 +268,22 @@ router.post("/oferta-nueva",
                                 }
                             }
 )
+
+//-------------------------------------------------------- Página de información -------------------------------------------------------------
+router.get("/que-es-ofertapp", (req,res,next) =>{  
+                                    if(req.isAuthenticated()){ 
+                                        autenticacion = true
+                                        return next()
+                                    }else{
+                                        autenticacion = false 
+                                        next()
+                                    }
+                                }, (req, res) =>{
+                                    res.render("que-es-ofertapp",{autenticacion,nombre})
+                                }
+
+)
+
 
 //-------------------------------------------------------- Terminar sesión de usuario -------------------------------------------------------------
 router.get('/logout',(req, res, next) =>{

@@ -14,6 +14,20 @@
     justify-content: center;
     flex-direction: column;
     align-items: center;
+    
 }
 
+.main-info{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 
+.card{
+    width: 20rem!important
+}
+
+.card-info, .card-subir{
+    width: 80%!important;
+}
