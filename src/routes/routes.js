@@ -7,11 +7,11 @@ import PassportLocal from "passport-local"
 import session from "express-session"
 import cookieParser from "cookie-parser";
 import mysql from "mysql"
-import dotenv from "dotenv" //dotenv para proteger los datos de la base de datos
-
+import dotenv from "dotenv" 
+import flash from "connect-flash"
 //-------------------------------------------------------------- Constantes -------------------------------------------------------------------------------
 const router = Router()
-const PassPortLocal = PassportLocal.Strategy //Middleware para crear la estrategia de autenticación
+const PassPortLocal = PassportLocal.Strategy 
 
 //-------------------------------------------------------------- Variables --------------------------------------------------------------------------------
 let nombre;
@@ -21,20 +21,19 @@ let autenticacion = false;
 dotenv.config() 
 
 //------------------------------------------------------- Conexión base de datos -------------------------------------------------------------------
-const conexion = mysql.createConnection({
+const conexion = mysql.createPool({
     host: process.env.DB_HOST,
-    database: process.env.DB,
+    database: process.env.DATABASE,
     user: process.env.DB_USER,
-    password: process.env.DB_PASS
+    password: process.env.DB_PASS,
+    port: process.env.DB_PORT
 });
 
-conexion.connect((error) =>{
-   if(error){
-       throw error
-   }else{
-       console.log("Conectado con Base de Datos")
-   }
-})
+conexion.getConnection((err,connection)=> {
+    if(err)
+    throw err;
+    console.log('Base de Datos conectada');
+;})
 
 //############################################################# MIDDLEWARE ########################################################################
 
@@ -57,21 +56,31 @@ router.use(session({
 router.use(passport.initialize())
 router.use(passport.session())
 
+//---------------------------------------------------------Configuración flash -------------------------------------------------------------------
+router.use(flash())
+
 //----------------------------------------- Creación de la estrategia para la validación de usuarios -------------------------------------------------
 passport.use(new PassPortLocal(function(username,password,done){
-    let usuario
-    conexion.query(`SELECT correo, contrasena,idusuario,nombre,apellido from usuario where correo LIKE '${username}'`, (error,res,fields) =>{
+    conexion.query(`SELECT * from usuarios where correo LIKE ?`,[username],(error,res,fields) =>{
         if(error){
             throw error
         }else{
-            usuario = res[0]
-            if(username == usuario.correo && password == usuario.contrasena){
-                nombre = usuario.nombre
-                return done(null,{id:usuario.idusuario, name:usuario.nombre, correo:usuario.correo,apellido:usuario.apellido})
+            if(res.length > 0){
+                
+                let usuario = res[0]
+                
+                if(username == usuario.correo && password == usuario.contrasena){
+                    nombre = usuario.nombre
+                    return done(null,{id:usuario.idusuario, name:usuario.nombre, correo:usuario.correo,apellido:usuario.apellido})
+                }
+                return done(null,false, { message: 'Tu mensaje de error aquí' })
+            }else{
+                return done(null,false, { message: 'Tu mensaje de error aquí' })
             }
-            return done(null,false)
+            
         }
     })
+    conexion.release
     
 }))
 
@@ -151,7 +160,7 @@ router.post("/formregistro", body("correo").isEmail().notEmpty(),
                                 let apellido = request.body.apellido
                                 let contra = request.body.password;
                                 
-                                conexion.query(`SELECT * from usuario where correo LIKE '${correo}'`, (error,response,fields) =>{
+                                conexion.query(`SELECT * from usuarios where correo LIKE ?`,[correo], (error,response,fields) =>{
                                    if(error){
                                         throw error
                                     }else{
@@ -159,8 +168,8 @@ router.post("/formregistro", body("correo").isEmail().notEmpty(),
                                         if(usuario.length > 0){
                                             res.send("<script>alert('Correo ya se encuentra registrado');window.location.href = 'http://localhost:3000/registro'</script>")
                                         }else{
-                                            conexion.query(`INSERT INTO usuario(nombre,apellido,correo,contrasena)
-                                                            VALUES ('${nombre}','${apellido}','${correo}','${contra}');`, (error,response,fields) =>{
+                                            conexion.query(`INSERT INTO usuarios(nombre,apellido,correo,contrasena)
+                                                            VALUES (?,?,?,?);`,[nombre,apellido,correo,contra], (error,response,fields) =>{
                                                                 if(error){
                                                                     throw error
                                                                 }else{
@@ -181,11 +190,13 @@ router.get("/login", (req, res) =>{
 })
 /*Comprobación de login, usando passport.authenticate mediante la estrategia "local" creada anteriormente,
 en caso de éxito dirige  a "index", en caso de fallo al autenticar dirige a "login" */
-router.post("/ingreso",passport.authenticate("local",{failureRedirect: "/login"}),
+router.post("/ingreso",passport.authenticate("local",{failureRedirect:"/login", failureFlash: true}),
                         function(req, res){
-                            nombre = req.session.passport.user.name
-                            autenticacion = true
-                            res.render("index",{autenticacion,nombre})
+                                
+                                nombre = req.session.passport.user.name
+                                autenticacion = true
+                                res.render("index",{autenticacion,nombre})
+                        
                         }                  
 )
 
@@ -269,6 +280,37 @@ router.post("/oferta-nueva",
                                 }
                             }
 )
+
+
+//-------------------------------------------------------------- Buscar oferta -------------------------------------------------------------------
+
+router.get("/busqueda",(req, res) =>{
+    res.render("busqueda")
+})
+
+router.get("/buscar", (req, response)=>{
+    let busqueda = "%" + req.query.busqueda.toString() + "%"
+    console.log( busqueda)
+    let query = {
+        name: 'get-ofertas',
+        text: "SELECT * FROM oferta o JOIN subcategoria s on(s.idsubcategoria = o.subcategoria_idsubcategoria) JOIN categoria c on(s.idsubcategoria = c.idcategoria) WHERE s.nombre LIKE ? OR c.nombre LIKE ?",
+        values: [busqueda],
+        rowMode: 'array',
+    }
+    conexion.query(query.text,[busqueda],
+        (error, res)=>{
+            if(error){
+                throw error
+            }else{
+                console.log(res)
+            }
+        
+    })
+    
+    
+})
+
+
 
 //-------------------------------------------------------- Página de información -------------------------------------------------------------
 router.get("/que-es-ofertapp", (req,res,next) =>{  
