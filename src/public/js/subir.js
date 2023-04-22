@@ -2,7 +2,7 @@
 const inputFile = document.querySelector('#imagen');
 const image = document.querySelector('#vistaPrevia');
 let base64URL= ""
-let localizacion = {latitud:0, longitud:0}
+let latitud, longitud
 const formularioSubida = document.getElementById("formSubir")
 const lugar = document.getElementById("lugar")
 const precio = document.getElementById("precio")
@@ -37,14 +37,25 @@ inputFile.addEventListener('input', async (event) => {
 });
 
 //Captura de geolocalización
-if(navigator.geolocation in navigator){
-    navigator.geolocation.getCurrentPosition(position => {
-        console.log(position);
-    }, e => {
-        console.log(e);
+if ("geolocation" in navigator) {
+    // El navegador soporta geolocalización
+    navigator.geolocation.getCurrentPosition(function(position) {
+      // Obtenemos la latitud y longitud
+      latitud = position.coords.latitude;
+      longitud = position.coords.longitude;
+    }, function(error) {
+      // Manejo de errores
+      console.log("Error al obtener la posición: " + error.message);
+    }, { 
+      enableHighAccuracy: true, 
+      timeout: 5000, 
+      maximumAge: 0 
     });
+} else {
+    // El navegador no soporta geolocalización
+    console.log("Geolocalización no soportada por este navegador.");
 }
-
+  
 
 
 
@@ -53,14 +64,14 @@ if(navigator.geolocation in navigator){
 formularioSubida.addEventListener("submit", evento =>{
     evento.preventDefault()
     
-    console.log(localizacion)
+
     let info =  {
                     imagen: base64URL,
                     lugar: lugar.value,
                     precio: precio.value,
                     descripcion: descripcion.value,
-                    latitud: 0,
-                    longitud: 0,
+                    latitud: latitud,
+                    longitud: longitud,
                     categoria: categoria.value
 
 
@@ -74,7 +85,7 @@ formularioSubida.addEventListener("submit", evento =>{
         body: JSON.stringify(info)
     }).then(
             alert("Oferta Guardada"),
-            location.reload(),
+
             
             )
   

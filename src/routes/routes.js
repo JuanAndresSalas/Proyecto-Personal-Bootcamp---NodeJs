@@ -9,6 +9,7 @@ import cookieParser from "cookie-parser";
 import mysql from "mysql"
 import dotenv from "dotenv" 
 import flash from "connect-flash"
+import { ingresarOferta, obtenerUsuario } from "../controllers/controllers.js";
 //-------------------------------------------------------------- Constantes -------------------------------------------------------------------------------
 const router = Router()
 const PassPortLocal = PassportLocal.Strategy 
@@ -47,7 +48,7 @@ router.use(cookieParser("secretKey"))
 //-------------------------------------------------------- Configuración session --------------------------------------------------------------------
 router.use(session({
     secret:"secretKey",
-    saveUninitialized: true, 
+    saveUninitialized: false, 
     resave:true
 
 }))
@@ -60,28 +61,13 @@ router.use(passport.session())
 router.use(flash())
 
 //----------------------------------------- Creación de la estrategia para la validación de usuarios -------------------------------------------------
-passport.use(new PassPortLocal(function(username,password,done){
-    conexion.query(`SELECT * from usuarios where correo LIKE ?`,[username],(error,res,fields) =>{
-        if(error){
-            throw error
-        }else{
-            if(res.length > 0){
-                
-                let usuario = res[0]
-                
-                if(username == usuario.correo && password == usuario.contrasena){
-                    nombre = usuario.nombre
-                    return done(null,{id:usuario.idusuario, name:usuario.nombre, correo:usuario.correo,apellido:usuario.apellido})
-                }
-                return done(null,false, { message: 'Tu mensaje de error aquí' })
-            }else{
-                return done(null,false, { message: 'Tu mensaje de error aquí' })
-            }
-            
-        }
-    })
-    conexion.release
-    
+passport.use(new PassPortLocal(async function(username,password,done){
+    const usuario = await obtenerUsuario(username,password)
+    if(!usuario){
+        return done(null,false, { message: 'Credenciales incorrectas' })
+    }else{
+        return done(null,{id:usuario.idusuario, name:usuario.nombre, correo:usuario.correo,apellido:usuario.apellido})
+    }    
 }))
 
 passport.serializeUser(function(user, done) {
@@ -236,47 +222,20 @@ router.post("/oferta-nueva",
                             body("latitud").notEmpty(),
                             body("longitud").notEmpty(),
                             body("categoria").isString().notEmpty(),
-                            (req, respuesta) =>{
+                            async (req, respuesta) =>{
                                 let error = validationResult(req)
                                 if ( !error.isEmpty()) {
                                     console.log(error.array());
                                     return respuesta.json({error: error.array() });
                                 }else{
+                                    req.body.id = req.session.passport.user.id
+                                    try{
+                                        let resultado = await ingresarOferta(req.body)  
+                                        console.log(resultado)
+                                    }catch(error){
+                                        console.log(error)
+                                    }
                                     
-                                    let imagen = req.body.imagen
-                                    let lugar = req.body.lugar
-                                    let precio = req.body.precio
-                                    let descripcion = req.body.descripcion
-                                    let categoria = req.body.categoria
-                                    let latitud = req.body.latitud
-                                    let longitud = req.body.longitud
-                                    let idsubcategoria;
-                                    let idusuario;
-                                    conexion.query(`SELECT idsubcategoria AS id,nombre
-                                                    FROM subcategoria
-                                                    WHERE nombre LIKE '${categoria}'
-                                                    UNION ALL
-                                                    SELECT idusuario,nombre
-                                                    FROM usuario
-                                                    WHERE nombre LIKE '${nombre}'`, (error,response,fields) =>{
-                                        if(error){
-                                             throw error
-                                        }else{
-                                            
-                                            idsubcategoria = response[0].id
-                                            idusuario = response[1].id
-                                            conexion.query(`INSERT INTO oferta(precio,lugar,latitud,longitud,descripcion,imagen,subcategoria_idsubcategoria,usuario_idusuario) 
-                                                            VALUES (${precio},'${lugar}',${latitud},${longitud},'${descripcion}','${imagen}',${idsubcategoria},${idusuario});`,
-                                                            (error,respo,fields) =>{
-                                                                if(error){
-                                                                    throw error
-                                                                }else{
-                                                                    console.log("Oferta guardada")
-                                                                }
-                                                            }
-                                            )
-                                        }                                   
-                                    })  
                                 }
                             }
 )

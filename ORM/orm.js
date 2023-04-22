@@ -38,13 +38,22 @@ const subcategoria = sequelize.define('subcategoria',{
 },{timestamp: false, createdAt: false,updatedAt: false})
 
 const oferta = sequelize.define('oferta',{
-    idoferta: {type:Sequelize.INTEGER, primaryKey: true, autoIncrement: 2000},
+    idoferta: {type:Sequelize.INTEGER, primaryKey: true, autoIncrement:true,},
     precio: {type: Sequelize.INTEGER, allowNull: false},
     lugar: {type: Sequelize.STRING, allowNull: false},
     longitud: {type: Sequelize.STRING, allowNull: false},
     latitud: {type: Sequelize.STRING, allowNull: false},
     descripcion: {type: Sequelize.STRING, allowNull: false},
-    imagen: {type: Sequelize.BLOB, allowNull: true}
+    imagen: {type: Sequelize.BLOB, allowNull: true,defaultValue: null,
+        set(value) {
+          if (value === '') {
+            this.setDataValue('imagen', null);
+          } else {
+            this.setDataValue('imagen', value);
+          }
+        }},
+    idsubcategoria_subcategoria: {type: Sequelize.INTEGER, allowNull: false},
+    idusuario_usuario: {type: Sequelize.INTEGER, allowNull: false}
 },{timestamp: false, createdAt: false,updatedAt: false})
 
 //Relaciones entre tablas
@@ -58,4 +67,4 @@ oferta.belongsTo(subcategoria, {foreignKey: 'idsubcategoria_subcategoria'})
 subcategoria.hasMany(oferta,  {foreignKey: 'idsubcategoria_subcategoria'})
 
 //Sincronización
-sequelize.sync({force: true})
+sequelize.sync({force:true})
