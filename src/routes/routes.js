@@ -9,7 +9,7 @@ import cookieParser from "cookie-parser";
 import mysql from "mysql"
 import dotenv from "dotenv" 
 import flash from "connect-flash"
-import { ingresarOferta, obtenerUsuario } from "../controllers/controllers.js";
+import { ingresarOferta, nuevoUsuario, obtenerUsuario } from "../controllers/controllers.js";
 //-------------------------------------------------------------- Constantes -------------------------------------------------------------------------------
 const router = Router()
 const PassPortLocal = PassportLocal.Strategy 
@@ -133,40 +133,21 @@ router.post("/formregistro", body("correo").isEmail().notEmpty(),
                              body("password").isString().notEmpty(),
                              (req,res,next) =>{   
                                 if(req.isAuthenticated()){
-                                    autenticacion = false
                                     res.render("index")
                                 }else{
-                                    autenticacion = true
+                                    
                                     return next()
                                 }
                             },
-                            (request, res) =>{     
-                                let correo = request.body.correo;
-                                let nombre = request.body.nombre;
-                                let apellido = request.body.apellido
-                                let contra = request.body.password;
-                                
-                                conexion.query(`SELECT * from usuarios where correo LIKE ?`,[correo], (error,response,fields) =>{
-                                   if(error){
-                                        throw error
-                                    }else{
-                                        let usuario = response
-                                        if(usuario.length > 0){
-                                            res.send("<script>alert('Correo ya se encuentra registrado');window.location.href = 'http://localhost:3000/registro'</script>")
-                                        }else{
-                                            conexion.query(`INSERT INTO usuarios(nombre,apellido,correo,contrasena)
-                                                            VALUES (?,?,?,?);`,[nombre,apellido,correo,contra], (error,response,fields) =>{
-                                                                if(error){
-                                                                    throw error
-                                                                }else{
-                                                                    res.send("<script>alert('Usuario registrado con éxito');window.location.href = 'http://localhost:3000/index'</script>")
-                                                                }
-                                            })
-                                            
-                                        }  
-                                    }
-                                })
-                                
+                            async (request, res) =>{  
+                                try{
+                                    let respuestaCreacion = await nuevoUsuario(request.body) 
+                                  console.log(respuestaCreacion)
+                                    res.render("registro",{respuestaCreacion})
+                                }catch(error){
+                                    res.render("registro",{error})
+                                    console.log(error)
+                                }                                
                             }
 )
 
@@ -249,7 +230,7 @@ router.get("/busqueda",(req, res) =>{
 
 router.get("/buscar", (req, response)=>{
     let busqueda = "%" + req.query.busqueda.toString() + "%"
-    console.log( busqueda)
+
     let query = {
         name: 'get-ofertas',
         text: "SELECT * FROM oferta o JOIN subcategoria s on(s.idsubcategoria = o.subcategoria_idsubcategoria) JOIN categoria c on(s.idsubcategoria = c.idcategoria) WHERE s.nombre LIKE ? OR c.nombre LIKE ?",

@@ -28,7 +28,7 @@ const usuario = sequelize.define('usuario',{
     idusuario: {type: Sequelize.INTEGER, primaryKey: true, autoIncrement: 1000},
     nombre: {type: Sequelize.STRING, allowNull: false},
     apellido: {type: Sequelize.STRING, allowNull: false},
-    correo: {type: Sequelize.STRING, allowNull: false},
+    correo: {type: Sequelize.STRING, allowNull: false, unique: true},
     contrasena: {type: Sequelize.STRING, allowNull: false},
 },{timestamp: false, createdAt: false,updatedAt: false})
 

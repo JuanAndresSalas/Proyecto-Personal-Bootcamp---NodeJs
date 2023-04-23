@@ -1,7 +1,23 @@
 {{#> template}}
 
 <main id="main-registro">
+    
     <form style="width: 20rem;" action="formregistro" method="post">
+        
+        {{#if error}}
+            <div class="mb-3"></div>
+                <p class="form-label" style="color: red">Error en registro<p>
+            </div>
+        {{/if}}
+        {{#if respuestaCreacion}}
+            <div class="mb-3"></div>
+                <p class="form-label" style="color: green">Usuario registrado con éxito<p>
+            </div>
+        {{else}}
+            <div class="mb-3"></div>
+                <p class="form-label" style="color: red">Usuario ya está registrado<p>
+            </div>
+        {{/if}}
         <div class="mb-3">
             <label for="correo" class="form-label">Correo electrónico</label>
             <input type="email" class="form-control" id="correo" name="correo" aria-describedby="emailHelp" required>

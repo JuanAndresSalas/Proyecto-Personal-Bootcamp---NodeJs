@@ -23,3 +23,30 @@ export async function ingresarOferta(body){
         }
     
 }
+
+export async function nuevoUsuario(body){
+    try {
+        let respuesta = await fetch("http://localhost:4000/v1/registrarse", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json'},
+            body: JSON.stringify({ 
+                                    nombre: body.nombre,
+                                    apellido: body.apellido,
+                                    correo: body.correo,
+                                    password: body.password
+                                })
+        })
+        
+        if(respuesta.status == 200){
+            let data = await respuesta.json()
+            return data.success
+        }else{
+            return false
+        }
+        
+    } catch (error){
+        
+        console.log(error)
+        return false
+    }
+}
