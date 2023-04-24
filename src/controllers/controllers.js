@@ -13,13 +13,20 @@ export async function obtenerUsuario(username,password){
 export async function ingresarOferta(body){
     let {imagen,lugar,precio,descripcion,latitud,longitud,categoria,id} = body
         try{
-            fetch(`http://localhost:4000/v1/crear-oferta/?lugar=${lugar}&descripcion=${descripcion}&latitud=${latitud}&longitud=${longitud}&id=${id}&categoria=${categoria}&precio=${precio}&imagen=${imagen}`,
+            let respuesta = await fetch(`http://localhost:4000/v1/crear-oferta/?lugar=${lugar}&descripcion=${descripcion}&latitud=${latitud}&longitud=${longitud}&id=${id}&categoria=${categoria}&precio=${precio}&imagen=${imagen}`,
             {method: 'PUT',
             headers: {
               'Content-Type': 'application/json'
             }})
+            if(respuesta.status == 200){
+                let data = await respuesta.json()
+                return data.success
+            }else{
+                return false
+            }
         }catch(error){
             console.log(error)
+            return false
         }
     
 }
@@ -27,7 +34,7 @@ export async function ingresarOferta(body){
 export async function nuevoUsuario(body){
     try {
         let respuesta = await fetch("http://localhost:4000/v1/registrarse", {
-            method: 'POST',
+            method: 'PUT',
             headers: { 'Content-Type': 'application/json'},
             body: JSON.stringify({ 
                                     nombre: body.nombre,

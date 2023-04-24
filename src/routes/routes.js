@@ -17,7 +17,7 @@ const PassPortLocal = PassportLocal.Strategy
 //-------------------------------------------------------------- Variables --------------------------------------------------------------------------------
 let nombre;
 let autenticacion = false;
-
+let subidaOferta
 //------------------------------------------------------- Configuracion de dotenv ------------------------------------------------------------------
 dotenv.config() 
 
@@ -142,7 +142,6 @@ router.post("/formregistro", body("correo").isEmail().notEmpty(),
                             async (request, res) =>{  
                                 try{
                                     let respuestaCreacion = await nuevoUsuario(request.body) 
-                                  console.log(respuestaCreacion)
                                     res.render("registro",{respuestaCreacion})
                                 }catch(error){
                                     res.render("registro",{error})
@@ -181,12 +180,13 @@ router.get("/subir-oferta", (req,res,next) =>{
                                 }
                             },
                             (req, res) =>{ //Con las comprobaciones anteriores exitosas pasa a renderizar la vista "subir-oferta"
+                                
                                 conexion.query(`SELECT nombre from subcategoria`, (error,response,fields) =>{
                                     if(error){
                                          throw error
                                     }else{
                                         let categorias = response.map(element => element.nombre)
-                                        res.render("subir-oferta",{autenticacion,nombre,categorias})
+                                        res.render("subir-oferta",{autenticacion,nombre,categorias,subidaOferta})
                                     }
                                  })                            
                             }
@@ -195,29 +195,30 @@ router.get("/subir-oferta", (req,res,next) =>{
 /*Recepción del formulario con action="oferta-nueva", validado mediante el uso de body de express-validator,
 body recibe como parámetro el name del input que enviamos al servidor y
 se encadenan funciones en virtud de la comprobación*/
-router.post("/oferta-nueva",
-                            body("precio").isNumeric().notEmpty(), //Ejemplo: comprueba que "precio" sea un número y no esté vacío
+router.post("/oferta-nueva",body("precio").isNumeric().notEmpty(), //Ejemplo: comprueba que "precio" sea un número y no esté vacío
                             body("imagen").isString(),
                             body("descripcion").isString().notEmpty(),
                             body("lugar").notEmpty().isString(),
                             body("latitud").notEmpty(),
                             body("longitud").notEmpty(),
                             body("categoria").isString().notEmpty(),
-                            async (req, respuesta) =>{
+                            async (req, res) =>{
+                                
                                 let error = validationResult(req)
                                 if ( !error.isEmpty()) {
                                     console.log(error.array());
-                                    return respuesta.json({error: error.array() });
+                                    return res.json({error: error.array() });
                                 }else{
                                     req.body.id = req.session.passport.user.id
                                     try{
-                                        let resultado = await ingresarOferta(req.body)  
-                                        console.log(resultado)
+                                        let resultado = await ingresarOferta(req.body)
+                                        res.send(resultado)
+                                        subidaOferta = true 
                                     }catch(error){
                                         console.log(error)
-                                    }
-                                    
-                                }
+                                    } 
+                                                                     
+                                }                  
                             }
 )
 

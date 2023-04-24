@@ -8,6 +8,14 @@
             <img src="/img/subir.png" alt="Imagen no Disponible" id="vistaPrevia" style="height: 20rem; width:25rem">
         </div>
         <div class="card-body">
+            {{#if subidaOferta}}
+                <div class="mb-3">
+                    <p style="color: green;">Oferta guardada correctamente</p>
+                </div>                
+            {{/if}}
+            <div class="mb-3" id="errorFetch" style="display: none;">
+                    <p style="color: rgb(255, 0, 0);">ERROR - Oferta NO guardada</p>
+            </div>
             <form id="formSubir" action="oferta-nueva">
                 <div class="mb-3">
                     <label for="imagen" class="form-label">Imagen</label>

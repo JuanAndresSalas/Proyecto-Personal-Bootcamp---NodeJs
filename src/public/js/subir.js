@@ -1,3 +1,4 @@
+
 // Variables
 const inputFile = document.querySelector('#imagen');
 const image = document.querySelector('#vistaPrevia');
@@ -83,8 +84,16 @@ formularioSubida.addEventListener("submit", evento =>{
         'Content-type' : 'application/json' 
         }, 
         body: JSON.stringify(info)
-    }).then(
-            alert("Oferta Guardada"),
-            )
+    })
+    .then(response => response.json())
+    .then(data => { 
+        if(data == true){
+            alert("Oferta ingresada con éxito")
+            location.reload()
+        }else{
+            alert("ERROR - Oferta no Ingresada")
+            
+        }
+    })
   
 })
