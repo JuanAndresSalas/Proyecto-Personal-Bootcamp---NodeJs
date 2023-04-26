@@ -9,7 +9,7 @@ import cookieParser from "cookie-parser";
 import mysql from "mysql"
 import dotenv from "dotenv" 
 import flash from "connect-flash"
-import { ingresarOferta, nuevoUsuario, obtenerUsuario } from "../controllers/controllers.js";
+import { busquedaOfertas, ingresarOferta, nuevoUsuario, obtenerCategorias, obtenerUsuario } from "../controllers/controllers.js";
 //-------------------------------------------------------------- Constantes -------------------------------------------------------------------------------
 const router = Router()
 const PassPortLocal = PassportLocal.Strategy 
@@ -158,7 +158,6 @@ router.get("/login", (req, res) =>{
 en caso de éxito dirige  a "index", en caso de fallo al autenticar dirige a "login" */
 router.post("/ingreso",passport.authenticate("local",{failureRedirect:"/login", failureFlash: true}),
                         function(req, res){
-                                
                                 nombre = req.session.passport.user.name
                                 autenticacion = true
                                 res.render("index",{autenticacion,nombre})
@@ -179,16 +178,14 @@ router.get("/subir-oferta", (req,res,next) =>{
                                     res.redirect("/login") //Si aún no está autenticado, redirigirá a "login"
                                 }
                             },
-                            (req, res) =>{ //Con las comprobaciones anteriores exitosas pasa a renderizar la vista "subir-oferta"
+                            async (req, res) =>{ //Con las comprobaciones anteriores exitosas pasa a renderizar la vista "subir-oferta"
                                 
-                                conexion.query(`SELECT nombre from subcategoria`, (error,response,fields) =>{
-                                    if(error){
-                                         throw error
-                                    }else{
-                                        let categorias = response.map(element => element.nombre)
-                                        res.render("subir-oferta",{autenticacion,nombre,categorias,subidaOferta})
-                                    }
-                                 })                            
+                                let data = await obtenerCategorias()
+                                
+                                let categorias = data.map(element => element.nombre)
+                                res.render("subir-oferta",{autenticacion,nombre,categorias,subidaOferta})
+                                    
+                                                            
                             }
 )
 
@@ -211,13 +208,13 @@ router.post("/oferta-nueva",body("precio").isNumeric().notEmpty(), //Ejemplo: co
                                 }else{
                                     req.body.id = req.session.passport.user.id
                                     try{
+                                        
                                         let resultado = await ingresarOferta(req.body)
                                         res.send(resultado)
                                         subidaOferta = true 
                                     }catch(error){
                                         console.log(error)
-                                    } 
-                                                                     
+                                    }                               
                                 }                  
                             }
 )
@@ -229,24 +226,23 @@ router.get("/busqueda",(req, res) =>{
     res.render("busqueda")
 })
 
-router.get("/buscar", (req, response)=>{
-    let busqueda = "%" + req.query.busqueda.toString() + "%"
-
-    let query = {
-        name: 'get-ofertas',
-        text: "SELECT * FROM oferta o JOIN subcategoria s on(s.idsubcategoria = o.subcategoria_idsubcategoria) JOIN categoria c on(s.idsubcategoria = c.idcategoria) WHERE s.nombre LIKE ? OR c.nombre LIKE ?",
-        values: [busqueda],
-        rowMode: 'array',
-    }
-    conexion.query(query.text,[busqueda],
-        (error, res)=>{
-            if(error){
-                throw error
-            }else{
-                console.log(res)
+router.get("/buscar", async(req, res)=>{
+    let busqueda = req.query.busqueda
+    
+    try{
+        let respuesta = await busquedaOfertas(busqueda)
+        respuesta.forEach(oferta => {
+            if(oferta.imagen == null){
+                oferta.imagen = "https://cdnx.jumpseller.com/mundovape/image/8300958/estrella-ofertas.png.png?1587356263"
             }
+        }); 
         
-    })
+          
+        res.render("resultados",{respuesta})
+    }catch(error){
+        console.log(error)
+        res.render("resultados")
+    }
     
     
 })

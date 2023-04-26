@@ -77,7 +77,7 @@ formularioSubida.addEventListener("submit", evento =>{
 
 
                 }
-                
+    
     fetch("http://localhost:3000/oferta-nueva",{
         method: 'POST',  
         headers: { 
@@ -87,6 +87,7 @@ formularioSubida.addEventListener("submit", evento =>{
     })
     .then(response => response.json())
     .then(data => { 
+        console.log("despues de fetch")
         if(data == true){
             alert("Oferta ingresada con éxito")
             location.reload()
