@@ -14,7 +14,7 @@ import indexRoutes from "./routes/routes.js"
 const app = express();
 
 // __dirname es donde quedará guardado de forma dínamica el path de los archivos en caso de mover el proyecto a otra carpeta o dirección
-const __dirname = dirname(fileURLToPath(import.meta.url))
+export const __dirname = dirname(fileURLToPath(import.meta.url))
 
 //Configuración de carpeta public, donde iran los css
 app.use(express.static(join(__dirname,"/public")))

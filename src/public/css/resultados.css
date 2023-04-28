@@ -2,10 +2,29 @@
     display: grid;
     gap: 1rem;
     grid-auto-rows: 22rem;
-    grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
 }
 
 .card-result{
     height: 10rem;
     width: 10rem;
 }
+
+@media (min-width: 768px) {
+    /* Estilos para pantallas grandes */
+    .main-resultados {
+      display: flex;
+      justify-content: center;
+    }
+    form {
+      width: 50%;
+    }
+  }
+  
+  @media (max-width: 767px) {
+    /* Estilos para pantallas pequeñas */
+    form {
+      width: 100%;
+    }
+  }
+  

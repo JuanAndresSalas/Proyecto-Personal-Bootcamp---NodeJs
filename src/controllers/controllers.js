@@ -1,5 +1,6 @@
 import dotenv from "dotenv"
 
+
 dotenv.config()
 
 export async function obtenerUsuario(username,password){
@@ -68,11 +69,23 @@ export async function busquedaOfertas(busqueda){
     try{
         let respuesta = await fetch(`http://localhost:4000/v1/buscar-oferta?busqueda=${busqueda}`)
         let data = await respuesta.json()
+         
         return data
     }catch(error){
         console.log(error)
         return []
     }
+}
+
+export async function ofertasSugeridas(){
+    try{
+        let ofertas = await fetch(`http://localhost:4000/v1/ofertas-sugeridas`)
+        return ofertas
+    }catch(error){
+        console.log(error)
+        return []
+    }
+
 }
 
 

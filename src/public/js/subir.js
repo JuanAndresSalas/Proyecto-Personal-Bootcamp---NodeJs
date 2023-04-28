@@ -32,7 +32,6 @@ inputFile.addEventListener('input', async (event) => {
     // Imagen a base64
     
     base64URL = await encodeFileAsBase64URL(inputFile.files[0]);
-    
     // Mostrar imagen 
     image.setAttribute('src', base64URL);
 });

@@ -1,12 +1,32 @@
+
 {{#> template}}
 
-<main>
+
+<main id="main-busqueda">
+    <div id="contenedor-busqueda">
     <form action="http://localhost:3000/buscar" method="get">
         <div class="mb-3">
             <input type="text" class="form-control" id="busqueda" placeholder="¿Qué buscas?" name="busqueda">
         </div>
-        <button type="submit" class="btn btn-primary" >Buscar</button>
+        <button type="submit" class="btn btn-primary">Buscar</button>
     </form>
+    </div>
+    <div class="container">
+    <div id="container-ofertas" >
+        {{#each respuesta}}
+        <div class="card">
+            <img src="{{imagen}}" class="card-img-top card-result" alt="Imagen no encontrada">
+            <div class="card-body">
+                <h5 class="card-title">{{lugar}}</h5>
+                <p class="card-text">{{precio}}</p>
+                <p class="card-text">{{descripcion}}</p>
+                <a href="https://www.google.com/maps/place/{{latitud}},{{longitud}}/&ll={{latitud}},{{longitud}}" target="_blank" class="btn btn-primary">Ver en Mapa</a>
+            </div>
+        </div>
+
+        {{/each}}
+    </div>
+    </div>
 </main>
 
 {{/template}}

@@ -1,17 +1,28 @@
-main{
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    width: 100%;
+#main-busqueda{
+    display: flex!important;
+    justify-content: center!important;
+    flex-direction: column!important;
+    width: 100%!important;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+#container-ofertas{
+    display: grid;
+    gap: 1rem;
+    grid-auto-rows: 22rem;
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
     
 }
 
-input{
-    border-top-left-radius: 2cm!important;
-    border-bottom-left-radius: 2cm!important;
-    height: 50px;
-
+#contenedor-busqueda{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 4%;
+    margin-top: 4%;
 }
+
 
 .card{
     padding: 0;
@@ -20,7 +31,7 @@ input{
 #divBusqueda{
     display: flex;
     justify-content: center;
-    width: 75%;
+    width: 100%;
     margin:0px auto; 
 }
 
@@ -32,18 +43,3 @@ input{
     border-bottom-right-radius: 2cm!important;
 }
 
-#addon-wrapping{
-    padding: 0;
-    border-top-right-radius: 2cm!important;
-    border-bottom-right-radius: 2cm!important;
-    width: 30%;
-}
-
-.row{
-    gap: 20px
-}
-
-#divCards{
-    justify-content: center;
-    margin:0px auto;
-}

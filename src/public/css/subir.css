@@ -31,3 +31,55 @@
 .card-info, .card-subir{
     width: 80%!important;
 }
+
+@media screen and (max-width: 992px) {
+    .navbar-collapse {
+        position: fixed;
+        top: 56px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
+        padding-right: 15px;
+        padding-left: 15px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        background-color: #f8f9fa;
+        transition: -webkit-transform .3s ease-in-out;
+        transition: transform .3s ease-in-out;
+        transition: transform .3s ease-in-out, -webkit-transform .3s ease-in-out;
+        -webkit-transform: translateX(-100%);
+        transform: translateX(-100%);
+    }
+    .navbar-collapse.show {
+        -webkit-transform: translateX(0%);
+        transform: translateX(0%);
+    }
+    .navbar-toggler {
+        position: relative;
+        float: right;
+        padding: .25rem .75rem;
+        font-size: 1.25rem;
+        line-height: 1;
+        background-color: transparent;
+        border: 1px solid transparent;
+        border-radius: .25rem;
+    }
+    .card-section {
+        margin-top: 100px;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .navbar-brand {
+        font-size: 20px;
+        padding-left: 30px;
+    }
+    .card {
+        margin-bottom: 20px;
+    }
+    #logo {
+        width: 50%;
+    }
+}
