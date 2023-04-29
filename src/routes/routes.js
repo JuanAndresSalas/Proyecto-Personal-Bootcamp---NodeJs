@@ -7,7 +7,7 @@ import PassportLocal from "passport-local"
 import session from "express-session"
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv"
-import { busquedaOfertas, ingresarOferta, nuevoUsuario, obtenerCategorias, obtenerUsuario, ofertasSugeridas } from "../controllers/controllers.js";
+import { busquedaOfertas, infoUsuariosConOfertas, ingresarOferta, nuevoUsuario, obtenerCategorias, obtenerUsuario, ofertasSugeridas } from "../controllers/controllers.js";
 import { encriptarPassword } from "../controllers/encriptacion.js";
 import   fs  from 'fs';
 import path from 'path';
@@ -150,11 +150,13 @@ router.get("/login", (req, res) => {
 /*Comprobación de login, usando passport.authenticate mediante la estrategia "local" creada anteriormente,
 en caso de éxito dirige  a "index", en caso de fallo al autenticar dirige a "login" */
 router.post("/ingreso", passport.authenticate("local", { failureRedirect: "/login", failureFlash: true }),
-    function (req, res) {
+    async(req, res) => {
         nombre = req.session.passport.user.name
         if(req.session.passport.user.admin){
             autenticacion = true
-            res.render("admin", { autenticacion, nombre })
+            let data = await infoUsuariosConOfertas()
+            let info = await data.json()
+            res.render("admin", { autenticacion, nombre, info })
         }else{
             autenticacion = true
             res.render("index", { autenticacion, nombre })
@@ -314,7 +316,22 @@ router.post("/contacto", body("correo").isString().notEmpty(),
         } else {
             res.send("<script>alert('Mensaje enviado!'); window.location.href = 'http://localhost:3000/index'</script>")
         }
-    })
+    }
+)
+
+//-------------------------------------------------------- Perfil -------------------------------------------------------------
+
+router.get("/admin", (req, res, next) => {
+    if (req.isAuthenticated()) {
+        autenticacion = true
+        let apellido = req.session.passport.user.apellido
+        let correo = req.session.passport.user.correo
+        res.render("contacto", { autenticacion, nombre, apellido, correo })
+    } else {
+        autenticacion = false
+        res.render("ind", { autenticacion, nombre })
+    }
+} )
 
 //-------------------------------------------------------- Terminar sesión de usuario -------------------------------------------------------------
 router.get('/logout', (req, res, next) => {

@@ -1,8 +1,27 @@
 {{#> template}}
 
 
-<main>
-    <h1>PAGINA ADMIN</h1>
+<main id="main-admin">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Correo</th>
+                <th scope="col">N° Ofertas Aportadas</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each info}}
+            <tr>
+                <th scope="row">{{id}}</th>
+                <td>{{nombre}} {{apellido}}</td>
+                <td>{{correo}}</td>
+                <td>{{cantidadOfertas}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
 </main>
 
 

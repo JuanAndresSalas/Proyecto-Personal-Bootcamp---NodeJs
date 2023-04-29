@@ -1,15 +1,18 @@
 {{#> template}}
-<head><link rel="stylesheet" href="/css/resultados.css"></head>
-<main class="main-resultados">
-    <form action="/buscar" method="get">
+<head><link rel="stylesheet" href="/css/busqueda.css"></head>
+<main id="main-busqueda">
+    <div id="contenedor-busqueda">
+    <form action="http://localhost:3000/buscar" method="get">
         <div class="mb-3">
             <input type="text" class="form-control" id="busqueda" placeholder="¿Qué buscas?" name="busqueda">
         </div>
         <button type="submit" class="btn btn-primary">Buscar</button>
     </form>
-    <div class="container-ofertas">
+    </div>
+    <div class="container">
+    <div id="container-ofertas" >
         {{#each respuesta}}
-        <div class="card" >
+        <div class="card">
             <img src="{{imagen}}" class="card-img-top card-result" alt="Imagen no encontrada">
             <div class="card-body">
                 <h5 class="card-title">{{lugar}}</h5>
@@ -21,7 +24,7 @@
 
         {{/each}}
     </div>
+    </div>
 </main>
-
 {{/template}}
 <script src="js/codificar-imagen.js"></script>

@@ -1,4 +1,8 @@
-#mainContacto{
+#main-contacto{
     display: flex!important;
     justify-content: center!important;
+}
+
+#form-contacto{
+    width: 100%;
 }

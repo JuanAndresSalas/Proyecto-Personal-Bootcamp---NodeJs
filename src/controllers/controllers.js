@@ -88,6 +88,17 @@ export async function ofertasSugeridas(){
 
 }
 
+export async function infoUsuariosConOfertas(){
+    try{
+        let info = await fetch(`http://localhost:4000/v1/datos-ofertapp`)
+        return info
+    }catch(error){
+        console.log(error)
+        return []
+    }
+
+}
+
 
 export async function obtenerCategorias(){
     try{

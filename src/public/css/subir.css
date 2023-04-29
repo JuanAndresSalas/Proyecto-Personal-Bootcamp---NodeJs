@@ -5,6 +5,12 @@
     mix-blend-mode: multiply;
 }
 
+#body-card-subir{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 #btn-subir{
     width: 100%;
 }
