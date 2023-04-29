@@ -11,4 +11,4 @@
 
 ## Rúbrica: 
 Links donde encontrar ejemplos de los aspectos a evaluar:
-- Selección de columnas requeridas para presentar la información solicitada: [API_NodeJS: src/controllers.js - Lineas 14 y 86 ](https://github.com/JuanAndresSalas/API_NodeJS/blob/main/src/controllers.js)
+- Selección de columnas requeridas para presentar la información solicitada: [API_NodeJS: src/controllers.js - Lineas 14 y 86 ](https://github.com/JuanAndresSalas/API_NodeJS/blob/main/src/controllers.js){:target="_blank"}
