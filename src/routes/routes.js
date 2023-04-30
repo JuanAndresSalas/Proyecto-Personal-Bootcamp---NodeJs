@@ -9,8 +9,6 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv"
 import { busquedaOfertas, infoUsuariosConOfertas, ingresarOferta, nuevoUsuario, obtenerCategorias, obtenerUsuario, ofertasSugeridas } from "../controllers/controllers.js";
 import { encriptarPassword } from "../controllers/encriptacion.js";
-import   fs  from 'fs';
-import path from 'path';
 import { __dirname } from "../index.js";
 //-------------------------------------------------------------- Constantes -------------------------------------------------------------------------------
 const router = Router()
@@ -182,6 +180,7 @@ router.get("/subir-oferta", (req, res, next) => {
     async (req, res) => { //Con las comprobaciones anteriores exitosas pasa a renderizar la vista "subir-oferta"
         try {
             let data = await obtenerCategorias()
+            //Uso de sentencias repetitivas
             let categorias = data.map(element => element.nombre)
             res.render("subir-oferta", { autenticacion, nombre, categorias, subidaOferta })
         } catch (error) {
