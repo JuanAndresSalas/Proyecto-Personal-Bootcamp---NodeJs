@@ -24,7 +24,7 @@ Links donde encontrar ejemplos de los aspectos a evaluar:
 - Uso de sentencias repetitivas: [Proyecto-Personal-Bootcamp---NodeJs src/routes/routes.js](https://github.com/JuanAndresSalas/Proyecto-Personal-Bootcamp---NodeJs/blob/master/src/routes/routes.js)
 - Convenciones y estilos de programación: [Proyecto-Personal-Bootcamp---NodeJs src/routes/routes.js](https://github.com/JuanAndresSalas/Proyecto-Personal-Bootcamp---NodeJs/blob/master/src/routes/routes.js)
 - Utilización correcta de estructuras de datos[Proyecto-Personal-Bootcamp---NodeJs src/public/js/subir.js](https://github.com/JuanAndresSalas/Proyecto-Personal-Bootcamp---NodeJs/blob/master/src/public/js/subir.js)
-- Manipulación de archivos: Frontend: [http://localhost:3000/subir-oferta](http://localhost:3000/subir-oferta) , Backend: [Proyecto-Personal-Bootcamp---NodeJs src/public/js/subir.js](https://github.com/JuanAndresSalas/Proyecto-Personal-Bootcamp---NodeJs/blob/master/src/public/js/subir.js)
+- Manipulación de archivos: Frontend: [http://localhost:3000/subir-oferta](http://localhost:3000/subir-oferta),JS: [Proyecto-Personal-Bootcamp---NodeJs src/public/js/subir.js](https://github.com/JuanAndresSalas/Proyecto-Personal-Bootcamp---NodeJs/blob/master/src/public/js/subir.js) , Backend: [Proyecto-Personal-Bootcamp---NodeJs src/routes/routes.js](https://github.com/JuanAndresSalas/Proyecto-Personal-Bootcamp---NodeJs/blob/master/src/routes/routes.js)
 
 #### Página Web y HTML
 - Uso de tags html, estilos y responsividad - Uso de Bootstrap: [Proyecto-Personal-Bootcamp---NodeJs src/views](https://github.com/JuanAndresSalas/Proyecto-Personal-Bootcamp---NodeJs/tree/master/src/views) , en esta carpeta se encuentran los archivos HBS donde se implementa  HTML y Bootstrap
