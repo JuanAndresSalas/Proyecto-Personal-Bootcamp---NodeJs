@@ -27,6 +27,8 @@ async function encodeFileAsBase64URL(file) {
     });
 };
 
+
+
 // Eventos
 inputFile.addEventListener('input', async (event) => {
     // Imagen a base64
@@ -61,20 +63,33 @@ if ("geolocation" in navigator) {
 
 //Envio de formulario
 
-formularioSubida.addEventListener("submit", evento =>{
+formularioSubida.addEventListener("submit", async evento =>{
     evento.preventDefault()
-    
+    function extractBase64Data(base64String) {
+        const regex = /^data:(.+);base64,(.*)$/;
+        const matches = base64String.match(regex);
+        if (matches == null) {
+          throw new Error('Invalid base64 string');
+        }
+        return matches[2];
+      }
 
+    const formData = new FormData();
+    formData.append('key', '9f4ad2843bbdfd452c919c02abdd34ad');
+    formData.append('image', extractBase64Data(base64URL));
+    let respuesta = await fetch('https://api.imgbb.com/1/upload',{
+        method: 'POST',
+        body: formData
+    })
+    let url = await respuesta.json()
     let info =  {
-                    imagen: base64URL,
+                    imagen: url.data.display_url,
                     lugar: lugar.value,
                     precio: precio.value,
                     descripcion: descripcion.value,
                     latitud: latitud,
                     longitud: longitud,
                     categoria: categoria.value
-
-
                 }
     
     fetch("http://localhost:3000/oferta-nueva",{
@@ -86,10 +101,9 @@ formularioSubida.addEventListener("submit", evento =>{
     })
     .then(response => response.json())
     .then(data => { 
-        console.log("despues de fetch")
         if(data == true){
             alert("Oferta ingresada con éxito")
-            location.reload()
+            //location.reload()
         }else{
             alert("ERROR - Oferta no Ingresada")
             

@@ -7,6 +7,11 @@ import PassportLocal from "passport-local"
 import session from "express-session"
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv"
+import Swal from "sweetalert2";
+import flash from 'express-flash'
+
+
+
 import { busquedaOfertas, infoUsuariosConOfertas, ingresarOferta, nuevoUsuario, obtenerCategorias, obtenerUsuario, ofertasSugeridas } from "../controllers/controllers.js";
 import { encriptarPassword } from "../controllers/encriptacion.js";
 import { __dirname } from "../index.js";
@@ -39,6 +44,8 @@ router.use(session({
 
 }))
 
+//---------------------------------------------------------Configuración flash -------------------------------------------------------------------
+router.use(flash())
 //---------------------------------------------------------Configuración passport -------------------------------------------------------------------
 router.use(passport.initialize())
 router.use(passport.session())
@@ -51,13 +58,13 @@ passport.use(new PassPortLocal(async function (username, password, done) {
     if (!usuario) {
         return done(null, false, { message: 'Credenciales incorrectas' })
     } else {
-        if(usuario.admin == 1){
+        if (usuario.admin == 1) {
             return done(null, { id: usuario.idusuario, name: usuario.nombre, correo: usuario.correo, apellido: usuario.apellido, admin: true })
-        }else{
+        } else {
             return done(null, { id: usuario.idusuario, name: usuario.nombre, correo: usuario.correo, apellido: usuario.apellido })
         }
-        
-    } 
+
+    }
 }))
 
 passport.serializeUser(function (user, done) {
@@ -82,8 +89,6 @@ router.get("/", (req, res, next) => {
 },
     (req, res) => {
         res.render("index", { autenticacion }, nombre)
-
-
     })
 
 router.get("/index", (req, res, next) => {
@@ -96,10 +101,12 @@ router.get("/index", (req, res, next) => {
     }
 },
     (req, res) => {
-        res.render("index", { autenticacion, nombre })
 
+        res.render("index", { autenticacion, nombre })
+        Swal.fire('HOLA HOLA')
     }
 )
+
 
 //-------------------------------------------------------------- Registro -----------------------------------------------------------------------
 router.get("/registro", (req, res, next) => {
@@ -108,6 +115,7 @@ router.get("/registro", (req, res, next) => {
         return next()
     } else {
         autenticacion = false
+
         res.render("registro")
     }
 },
@@ -125,7 +133,6 @@ router.post("/formregistro", body("correo").isEmail().notEmpty(),
         if (req.isAuthenticated()) {
             res.render("index")
         } else {
-
             return next()
         }
     },
@@ -138,6 +145,7 @@ router.post("/formregistro", body("correo").isEmail().notEmpty(),
             res.render("registro", { error })
             console.log(error)
         }
+
     }
 )
 
@@ -148,18 +156,19 @@ router.get("/login", (req, res) => {
 /*Comprobación de login, usando passport.authenticate mediante la estrategia "local" creada anteriormente,
 en caso de éxito dirige  a "index", en caso de fallo al autenticar dirige a "login" */
 router.post("/ingreso", passport.authenticate("local", { failureRedirect: "/login", failureFlash: true }),
-    async(req, res) => {
+    async (req, res) => {
         nombre = req.session.passport.user.name
-        if(req.session.passport.user.admin){
+        if (req.session.passport.user.admin) {
             autenticacion = true
             let data = await infoUsuariosConOfertas()
             let info = await data.json()
             res.render("admin", { autenticacion, nombre, info })
-        }else{
+        } else {
             autenticacion = true
+
             res.render("index", { autenticacion, nombre })
         }
-        
+
 
     }
 )
@@ -231,14 +240,13 @@ router.get("/busqueda", (req, res, next) => {
         autenticacion = true
         return next()
     } else {
-        autenticacion = false 
+        autenticacion = false
         return next()
     }
 }, async (req, res) => {
     let data = await ofertasSugeridas()
-    
-    let respuesta = await  data.json()
-   res.render("busqueda",{respuesta, autenticacion})
+    let respuesta = await data.json()
+    res.render("busqueda", { respuesta, autenticacion })
 })
 
 router.get("/buscar", (req, res, next) => {
@@ -247,7 +255,7 @@ router.get("/buscar", (req, res, next) => {
         autenticacion = true
         return next()
     } else {
-        autenticacion = false 
+        autenticacion = false
         return next()
     }
 }, async (req, res) => {
@@ -260,11 +268,12 @@ router.get("/buscar", (req, res, next) => {
                 oferta.imagen = "https://cdnx.jumpseller.com/mundovape/image/8300958/estrella-ofertas.png.png?1587356263"
             }
         });
-        res.render("resultados", {autenticacion, respuesta, nombre })
+        res.render("resultados", { autenticacion, respuesta, nombre })
     } catch (error) {
         console.log(error)
-        res.render("resultados", { autenticacion,nombre })
+        res.render("resultados", { autenticacion, nombre })
     }
+
 
 
 })
@@ -330,7 +339,7 @@ router.get("/admin", (req, res, next) => {
         autenticacion = false
         res.render("ind", { autenticacion, nombre })
     }
-} )
+})
 
 //-------------------------------------------------------- Terminar sesión de usuario -------------------------------------------------------------
 router.get('/logout', (req, res, next) => {
@@ -342,13 +351,15 @@ router.get('/logout', (req, res, next) => {
 });
 
 //------------------------------------------------------------ Dirección Erronea ----------------------------------------------------------------
- router.get("*", (req, res, next) => {
-     if (req.isAuthenticated()) {
-         autenticacion = true
-         res.render("error", { autenticacion, nombre })
-     } else {
-         res.render("error")
-     }
+router.get("*", (req, res, next) => {
+    if (req.isAuthenticated()) {
+        autenticacion = true
+        res.render("error", { autenticacion, nombre })
+    } else {
+        res.render("error")
+    }
 })
 
 export default router //Exportar el contenido de este archivo
+
+
