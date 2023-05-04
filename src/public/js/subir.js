@@ -1,4 +1,5 @@
 
+
 // Variables
 const inputFile = document.querySelector('#imagen');
 const image = document.querySelector('#vistaPrevia');
@@ -36,6 +37,7 @@ inputFile.addEventListener('input', async (event) => {
     base64URL = await encodeFileAsBase64URL(inputFile.files[0]);
     // Mostrar imagen 
     image.setAttribute('src', base64URL);
+    
 });
 
 //Captura de geolocalización
@@ -60,7 +62,6 @@ if ("geolocation" in navigator) {
   
 
 
-
 //Envio de formulario
 
 formularioSubida.addEventListener("submit", async evento =>{
@@ -72,25 +73,35 @@ formularioSubida.addEventListener("submit", async evento =>{
           throw new Error('Invalid base64 string');
         }
         return matches[2];
-      }
+    }
+  
+    let  info =  {
+        
+        lugar: lugar.value,
+        precio: precio.value,
+        descripcion: descripcion.value,
+        latitud: latitud,
+        longitud: longitud,
+        categoria: categoria.value
+    }
+    if(base64URL != ""){
+        const formData = new FormData();
+        formData.append('key', '9f4ad2843bbdfd452c919c02abdd34ad');
+        formData.append('image', extractBase64Data(base64URL));
+        let hora = new Date
+        let horaString = hora.toString().replace(/\s/g, '');
+        formData.append('name',horaString)
 
-    const formData = new FormData();
-    formData.append('key', '9f4ad2843bbdfd452c919c02abdd34ad');
-    formData.append('image', extractBase64Data(base64URL));
-    let respuesta = await fetch('https://api.imgbb.com/1/upload',{
-        method: 'POST',
-        body: formData
-    })
-    let url = await respuesta.json()
-    let info =  {
-                    imagen: url.data.display_url,
-                    lugar: lugar.value,
-                    precio: precio.value,
-                    descripcion: descripcion.value,
-                    latitud: latitud,
-                    longitud: longitud,
-                    categoria: categoria.value
-                }
+        
+        let respuesta = await fetch('https://api.imgbb.com/1/upload',{
+            method: 'POST',
+            body: formData
+        })
+        let url = await respuesta.json()
+        info.imagen = url.data.display_url
+    }else{
+        info.imagen = ""
+    }
     
     fetch("http://localhost:3000/oferta-nueva",{
         method: 'POST',  
@@ -101,9 +112,11 @@ formularioSubida.addEventListener("submit", async evento =>{
     })
     .then(response => response.json())
     .then(data => { 
+        console.log(data)
         if(data == true){
             alert("Oferta ingresada con éxito")
-            //location.reload()
+            
+            location.reload()
         }else{
             alert("ERROR - Oferta no Ingresada")
             

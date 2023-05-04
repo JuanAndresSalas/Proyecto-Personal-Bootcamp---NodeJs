@@ -101,9 +101,14 @@ router.get("/index", (req, res, next) => {
     }
 },
     (req, res) => {
-
+        
         res.render("index", { autenticacion, nombre })
-        Swal.fire('HOLA HOLA')
+        Swal.fire({
+            title: "Éxito!",
+            text: "El usuario ha sido creado correctamente.",
+            icon: "success",
+            confirmButtonText: "OK",
+          })
     }
 )
 
@@ -246,6 +251,11 @@ router.get("/busqueda", (req, res, next) => {
 }, async (req, res) => {
     let data = await ofertasSugeridas()
     let respuesta = await data.json()
+    respuesta.forEach(oferta => {
+        if (oferta.imagen == null) {
+            oferta.imagen = "/img/logo.jpg"
+        }
+    });
     res.render("busqueda", { respuesta, autenticacion })
 })
 
