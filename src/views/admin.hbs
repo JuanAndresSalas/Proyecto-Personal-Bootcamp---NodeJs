@@ -2,7 +2,9 @@
 
 
 <main id="main-admin">
-    <table class="table">
+    <button class="btn btn-dark" id="btn-mostrar-usuarios" onclick="mostrarUsuarios()">Mostrar Usuarios</button> 
+    <button class="btn btn-dark" id="btn-mostrar-ofertas" onclick="mostrarOfertas()">Mostrar Ofertas</button> 
+    <table class="table" id="tabla-usuarios" style="display: none;">
         <thead>
             <tr>
                 <th scope="col">ID</th>
@@ -22,7 +24,62 @@
             {{/each}}
         </tbody>
     </table>
+    <button class="btn btn-dark" id="btn-ocultar-usuarios" style="display: none;" onclick="ocultarUsuarios()">Ocultar Usuarios</button>
+    <table class="table" id="tabla-ofertas" style="display: none;">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Lugar</th>
+                <th scope="col">Imagen</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Coordenadas</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each ofertas}}
+            <tr>
+                <th scope="row">{{id}}</th>
+                <td>{{lugar}}</td>
+                <td>{{imagen}}</td>
+                <td>{{descripcion}}</td>
+                <td>{{precio}}</td>
+                <td>{{latitud}} {{longitud}}</td>
+                
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+    <button class="btn btn-dark" id="btn-ocultar-ofertas" style="display: none;" onclick="ocultarOfertas()">Ocultar Ofertas</button>
 </main>
 
 
 {{/template}}
+
+<script>
+    let tablaUsuarios = document.getElementById("tabla-usuarios")
+    let tablaOfertas = document.getElementById("tabla-ofertas")
+    let btnOcultarUsuarios = document.getElementById("btn-ocultar-usuarios")
+    let btnOcultarOfertas = document.getElementById("btn-ocultar-ofertas")
+
+    function mostrarUsuarios(){
+        tablaUsuarios.style.display = "table"
+        btnOcultarUsuarios.style.display = "block"
+    }  
+    
+
+    function ocultarUsuarios(){
+        tablaUsuarios.style.display = "none"
+        btnOcultarUsuarios.style.display = "none"
+    }
+
+    function mostrarOfertas(){
+        tablaOfertas.style.display = "table"
+        btnOcultarOfertas.style.display = "block"
+    }
+
+    function ocultarOfertas(){
+        tablaOfertas.style.display = "none"
+        btnOcultarOfertas.style.display = "none"
+    }
+</script>

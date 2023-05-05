@@ -1,5 +1,6 @@
 
 
+
 // Variables
 const inputFile = document.querySelector('#imagen');
 const image = document.querySelector('#vistaPrevia');

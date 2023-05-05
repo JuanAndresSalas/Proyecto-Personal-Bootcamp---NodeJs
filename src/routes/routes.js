@@ -7,7 +7,7 @@ import PassportLocal from "passport-local"
 import session from "express-session"
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv"
-import Swal from "sweetalert2";
+
 import flash from 'express-flash'
 
 
@@ -103,12 +103,7 @@ router.get("/index", (req, res, next) => {
     (req, res) => {
         
         res.render("index", { autenticacion, nombre })
-        Swal.fire({
-            title: "Éxito!",
-            text: "El usuario ha sido creado correctamente.",
-            icon: "success",
-            confirmButtonText: "OK",
-          })
+        
     }
 )
 
