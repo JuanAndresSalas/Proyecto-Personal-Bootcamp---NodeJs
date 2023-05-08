@@ -7,10 +7,6 @@ import PassportLocal from "passport-local"
 import session from "express-session"
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv"
-<<<<<<< HEAD
-
-=======
->>>>>>> 46b50efa2a1d4ffc52f08c06b870dfdb58551bba
 import flash from 'express-flash'
 
 
@@ -153,34 +149,23 @@ router.get("/login", (req, res) => {
 })
 /*Comprobación de login, usando passport.authenticate mediante la estrategia "local" creada anteriormente,
 en caso de éxito dirige  a "index", en caso de fallo al autenticar dirige a "login" */
-router.post("/ingreso", (req, res, next) => {
-    passport.authenticate("local", (err, user, info) => {
-        if (err) {
-            return next(err)
+router.post("/ingreso", passport.authenticate("local", { failureRedirect: "/login"}),
+    async (req, res) => {
+        nombre = req.session.passport.user.name
+        let admin = req.session.passport.user.admin
+        if (admin) {
+            autenticacion = true
+            mensajeError = false
+            res.render("index", { autenticacion, nombre, admin })
+        } else {
+            autenticacion = true
+            mensajeError = false
+            res.render("index", { autenticacion, nombre })
         }
-<<<<<<< HEAD
-        mensajeError = false
+
 
     }
 )
-=======
-        if (!user) {
-            let mensaje = info.message
-            res.render("login",{mensaje})
-        }else{
-            const nombre = user.name
-            const admin = user.admin || false
-            const autenticacion = true
-            if (admin) {
-                res.render("index", { autenticacion, nombre, admin })
-            } else {
-                res.render("index", { autenticacion, nombre })
-            }
-        }
-        
-    })(req, res, next)
-})
->>>>>>> 46b50efa2a1d4ffc52f08c06b870dfdb58551bba
 
 //-------------------------------------------------------------- Subir oferta -------------------------------------------------------------------
 
