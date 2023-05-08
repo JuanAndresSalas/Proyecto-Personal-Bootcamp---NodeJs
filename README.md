@@ -9,6 +9,10 @@
 
 **Para fines prácticos de demostración se agregaron los archivos .env de los respectivos proyectos**
 
+**Cuenta Administrador: admin@mail.com**
+**Contraseña: 123456789**
+
+
 
 ## Rúbrica: 
 Links donde encontrar ejemplos de los aspectos a evaluar:
