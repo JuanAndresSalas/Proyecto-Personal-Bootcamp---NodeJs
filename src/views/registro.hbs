@@ -1,23 +1,9 @@
 {{#> template}}
 
 <main id="main-registro">
-    
+
     <form style="width: 20rem;" action="formregistro" method="post">
-        
-        {{#if error}}
-            <div class="mb-3"></div>
-                <p class="form-label" style="color: red">Error en registro<p>
-            </div>
-        {{/if}}
-        {{#if respuestaCreacion}}
-            <div class="mb-3"></div>
-                <p class="form-label" style="color: green">Usuario registrado con éxito<p>
-            </div>
-        {{else}}
-            <div class="mb-3"></div>
-                <p class="form-label" style="color: red">Usuario ya está registrado<p>
-            </div>
-        {{/if}}
+
         <div class="mb-3">
             <label for="correo" class="form-label">Correo electrónico</label>
             <input type="email" class="form-control" id="correo" name="correo" aria-describedby="emailHelp" required>
@@ -35,9 +21,36 @@
             <label for="password" class="form-label">Contraseña</label>
             <input type="password" class="form-control" id="password" name="password" required>
         </div>
-        
+
         <button type="submit" class="btn btn-primary">Registrarse</button>
-        </form>
+    </form>
 </main>
+
+{{#if respuestaCreacion}}
+    <div class="modal" tabindex="-1" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Registro</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>{{respuestaCreacion.mensaje}}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        window.addEventListener('load', function () {
+            var modal = document.getElementById('myModal');
+            var modalInstance = new bootstrap.Modal(modal);
+            modalInstance.show();
+        });
+
+    </script>
+{{/if}}
 
 {{/template}}

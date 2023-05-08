@@ -1,21 +1,13 @@
 
-<head><link rel="stylesheet" href="/css/subir.css"></head>
+
 {{#> template}}
 
-<main  id="main-subir">
+<main  id="main-subir-oferta">
     <div class="card card-subir" style="width: 20rem;">
         <div class="card-img-top" >
             <img src="/img/subir.png" alt="Imagen no Disponible" id="vistaPrevia" style="height: 20rem; width:25rem">
         </div>
         <div class="card-body" id="body-card-subir">
-            {{#if subidaOferta}}
-                <div class="mb-3">
-                    <p style="color: green;">Oferta guardada correctamente</p>
-                </div>                
-            {{/if}}
-            <div class="mb-3" id="errorFetch" style="display: none;">
-                    <p style="color: rgb(255, 0, 0);">ERROR - Oferta NO guardada</p>
-            </div>
             <form id="formSubir" action="oferta-nueva">
                 <div class="mb-3">
                     <label for="imagen" class="form-label">Imagen</label>
@@ -49,5 +41,25 @@
 </main>
 
 
+
 {{/template}}
 <script src="/js/subir.js"></script>
+
+
+    <div class="modal" tabindex="-1" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Subir Oferta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="recargarPagina()"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="mensajeModal"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal" onclick="recargarPagina()">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+

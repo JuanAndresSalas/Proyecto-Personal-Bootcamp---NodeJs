@@ -2,8 +2,8 @@
 
 
 <main id="main-admin">
-    <button class="btn btn-dark" id="btn-mostrar-usuarios" onclick="mostrarUsuarios()">Mostrar Usuarios</button> 
-    <button class="btn btn-dark" id="btn-mostrar-ofertas" onclick="mostrarOfertas()">Mostrar Ofertas</button> 
+    <button class="btn btn-dark" id="btn-mostrar-usuarios" onclick="mostrarUsuarios()">Mostrar Usuarios</button>
+    <button class="btn btn-dark" id="btn-mostrar-ofertas" onclick="mostrarOfertas()">Mostrar Ofertas</button>
     <table class="table" id="tabla-usuarios" style="display: none;">
         <thead>
             <tr>
@@ -24,7 +24,8 @@
             {{/each}}
         </tbody>
     </table>
-    <button class="btn btn-dark" id="btn-ocultar-usuarios" style="display: none;" onclick="ocultarUsuarios()">Ocultar Usuarios</button>
+    <button class="btn btn-dark" id="btn-ocultar-usuarios" style="display: none;" onclick="ocultarUsuarios()">Ocultar
+        Usuarios</button>
     <table class="table" id="tabla-ofertas" style="display: none;">
         <thead>
             <tr>
@@ -34,6 +35,10 @@
                 <th scope="col">Descripción</th>
                 <th scope="col">Precio</th>
                 <th scope="col">Coordenadas</th>
+                <th scope="col">Subcategoría</th>
+                <th scope="col">Categoría</th>
+                <th scope="col">Editar</th>
+                <th scope="col">Borrar</th>
             </tr>
         </thead>
         <tbody>
@@ -44,42 +49,41 @@
                 <td>{{imagen}}</td>
                 <td>{{descripcion}}</td>
                 <td>{{precio}}</td>
-                <td>{{latitud}} {{longitud}}</td>
-                
+                <td>{{latitud}}, {{longitud}}</td>
+                <td>{{subcategoria}}</td>
+                <td>{{categoria}}</td>
+                <td><button class="btn btn-success" value={{id}}>Editar</button></td>
+                <td><button type="button" value={{id}} class="btn btn-danger btn-eliminar" data-bs-toggle="modal" data-bs-target="#confirmar-eliminar">Eliminar</button></td>
+
             </tr>
             {{/each}}
         </tbody>
     </table>
     <button class="btn btn-dark" id="btn-ocultar-ofertas" style="display: none;" onclick="ocultarOfertas()">Ocultar Ofertas</button>
+    <!-- Modal -->
+    <div class="modal fade" id="confirmar-eliminar" tabindex="-1" aria-labelledby="confirmar-eliminar" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmar-eliminarLabel">Confirmar Eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h4>¿Desea eliminar oferta?</h4>
+                    <div  style="display: flex;">
+                        <h5>ID Oferta: </h5><h5 id="id-oferta-modal"></h5>
+                    </div>                   
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="confirmar-eliminacion" class="btn btn-danger" >Eliminar</button>
+                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
 
 
 {{/template}}
 
-<script>
-    let tablaUsuarios = document.getElementById("tabla-usuarios")
-    let tablaOfertas = document.getElementById("tabla-ofertas")
-    let btnOcultarUsuarios = document.getElementById("btn-ocultar-usuarios")
-    let btnOcultarOfertas = document.getElementById("btn-ocultar-ofertas")
-
-    function mostrarUsuarios(){
-        tablaUsuarios.style.display = "table"
-        btnOcultarUsuarios.style.display = "block"
-    }  
-    
-
-    function ocultarUsuarios(){
-        tablaUsuarios.style.display = "none"
-        btnOcultarUsuarios.style.display = "none"
-    }
-
-    function mostrarOfertas(){
-        tablaOfertas.style.display = "table"
-        btnOcultarOfertas.style.display = "block"
-    }
-
-    function ocultarOfertas(){
-        tablaOfertas.style.display = "none"
-        btnOcultarOfertas.style.display = "none"
-    }
-</script>
+<script src="js/admin.js"></script>

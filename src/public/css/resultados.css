@@ -10,6 +10,22 @@
     width: 10rem;
 }
 
+.card{
+  display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-body{
+  flex: 1 1 auto;
+    padding: 1rem 1rem;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-content: center;
+    flex-wrap: wrap;
+}
+
 @media (min-width: 768px) {
     /* Estilos para pantallas grandes */
     .main-resultados {

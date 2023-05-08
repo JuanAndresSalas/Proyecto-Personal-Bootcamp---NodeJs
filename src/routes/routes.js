@@ -7,14 +7,15 @@ import PassportLocal from "passport-local"
 import session from "express-session"
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv"
-
+import swal from "sweetalert2"
 import flash from 'express-flash'
 
 
 
-import { busquedaOfertas, infoUsuariosConOfertas, ingresarOferta, nuevoUsuario, obtenerCategorias, obtenerUsuario, ofertasSugeridas } from "../controllers/controllers.js";
+import { borrarOferta, busquedaOfertas, infoUsuariosConOfertas, ingresarOferta, nuevoUsuario, obtenerCategorias, obtenerOfertasAdmin, obtenerUsuario, ofertasSugeridas } from "../controllers/controllers.js";
 import { encriptarPassword } from "../controllers/encriptacion.js";
 import { __dirname } from "../index.js";
+import { formatoPrecio } from "../js/functions.js";
 //-------------------------------------------------------------- Constantes -------------------------------------------------------------------------------
 const router = Router()
 const PassPortLocal = PassportLocal.Strategy
@@ -22,7 +23,7 @@ const PassPortLocal = PassportLocal.Strategy
 //-------------------------------------------------------------- Variables --------------------------------------------------------------------------------
 let nombre;
 let autenticacion = false;
-let subidaOferta
+
 //------------------------------------------------------- Configuracion de dotenv ------------------------------------------------------------------
 dotenv.config()
 
@@ -94,36 +95,28 @@ router.get("/", (req, res, next) => {
 router.get("/index", (req, res, next) => {
     if (req.isAuthenticated()) { //Si ya está autenticado seguira al siguiente parámetro que ingresemos a router.get()
         autenticacion = true
-        return next()
+        let admin = req.session.passport.user.admin
+        if (admin) {
+            res.render("index", { autenticacion, nombre, admin })
+        } else {
+            res.render("index", { autenticacion, nombre })
+        }
     } else {
-        autenticacion = false
-        return next()
+        res.render("index")
     }
-},
-    (req, res) => {
-        
-        res.render("index", { autenticacion, nombre })
-        
-    }
-)
+})
 
 
 //-------------------------------------------------------------- Registro -----------------------------------------------------------------------
 router.get("/registro", (req, res, next) => {
     if (req.isAuthenticated()) {
         autenticacion = true
-        return next()
+        res.render("index", { autenticacion, nombre })
     } else {
         autenticacion = false
-
         res.render("registro")
     }
-},
-    (req, res) => {
-        res.render("index", { autenticacion, nombre })
-
-    }
-)
+})
 
 router.post("/formregistro", body("correo").isEmail().notEmpty(),
     body("nombre").isString().notEmpty(),
@@ -142,7 +135,7 @@ router.post("/formregistro", body("correo").isEmail().notEmpty(),
             let respuestaCreacion = await nuevoUsuario(request.body)
             res.render("registro", { respuestaCreacion })
         } catch (error) {
-            res.render("registro", { error })
+            res.render("registro", { mensaje: "Error al ingresar usuario" })
             console.log(error)
         }
 
@@ -158,11 +151,10 @@ en caso de éxito dirige  a "index", en caso de fallo al autenticar dirige a "lo
 router.post("/ingreso", passport.authenticate("local", { failureRedirect: "/login", failureFlash: true }),
     async (req, res) => {
         nombre = req.session.passport.user.name
-        if (req.session.passport.user.admin) {
+        let admin = req.session.passport.user.admin
+        if (admin) {
             autenticacion = true
-            let data = await infoUsuariosConOfertas()
-            let info = await data.json()
-            res.render("admin", { autenticacion, nombre, info })
+            res.render("index", { autenticacion, nombre, admin })
         } else {
             autenticacion = true
 
@@ -191,7 +183,7 @@ router.get("/subir-oferta", (req, res, next) => {
             let data = await obtenerCategorias()
             //Uso de sentencias repetitivas
             let categorias = data.map(element => element.nombre)
-            res.render("subir-oferta", { autenticacion, nombre, categorias, subidaOferta })
+            res.render("subir-oferta", { autenticacion, nombre, categorias })
         } catch (error) {
             console.log(error)
             res.render("subir-oferta")
@@ -213,45 +205,61 @@ router.post("/oferta-nueva", body("precio").isNumeric().notEmpty(), //Ejemplo: c
     body("longitud").notEmpty(),
     body("categoria").isString().notEmpty(),
     async (req, res) => {
-
         let error = validationResult(req)
         if (!error.isEmpty()) {
             console.log(error.array());
-            return res.json({ error: error.array() });
+            return res.send({ mensaje: "ERROR: Oferta no se ha guardado" })
         } else {
             req.body.id = req.session.passport.user.id
             try {
-
                 let resultado = await ingresarOferta(req.body)
-                res.send(resultado)
-                subidaOferta = true
+
+                res.send({ mensaje: "Oferta ingresada con éxito" })
+
             } catch (error) {
                 console.log(error)
+                res.send("subir-oferta", { mensaje: "ERROR: Oferta no se ha guardado" })
             }
         }
     }
 )
 
 
+
 //-------------------------------------------------------------- Buscar oferta -------------------------------------------------------------------
 
-router.get("/busqueda", (req, res, next) => {
-    if (req.isAuthenticated()) { //Si ya está autenticado seguira al siguiente parámetro que ingresemos a router.get()
+router.get("/busqueda", async (req, res, next) => {
+    if (req.isAuthenticated()) {
         autenticacion = true
-        return next()
+        let data = await ofertasSugeridas()
+        let respuesta = await data.json()
+        let admin = req.session.passport.user.admin
+        respuesta.forEach(oferta => {
+            if (oferta.imagen == null) {
+                oferta.imagen = "/img/logo.jpg"
+            }
+            oferta.precio = formatoPrecio(oferta.precio)
+        });
+
+        if (admin) {
+            res.render("busqueda", { respuesta, autenticacion, admin, nombre })
+        } else {
+            res.render("busqueda", { respuesta, autenticacion, nombre })
+        }
     } else {
         autenticacion = false
-        return next()
+        let data = await ofertasSugeridas()
+        let respuesta = await data.json()
+
+        respuesta.forEach(oferta => {
+            if (oferta.imagen == null) {
+                oferta.imagen = "/img/logo.jpg"
+            }
+            oferta.precio = formatoPrecio(oferta.precio)
+        });
+
+        res.render("busqueda", { respuesta, autenticacion, nombre })
     }
-}, async (req, res) => {
-    let data = await ofertasSugeridas()
-    let respuesta = await data.json()
-    respuesta.forEach(oferta => {
-        if (oferta.imagen == null) {
-            oferta.imagen = "/img/logo.jpg"
-        }
-    });
-    res.render("busqueda", { respuesta, autenticacion })
 })
 
 router.get("/buscar", (req, res, next) => {
@@ -268,15 +276,19 @@ router.get("/buscar", (req, res, next) => {
 
     try {
         let respuesta = await busquedaOfertas(busqueda)
+        let admin = req.session.passport.user.admin
         respuesta.forEach(oferta => {
             if (oferta.imagen == null) {
-                oferta.imagen = "https://cdnx.jumpseller.com/mundovape/image/8300958/estrella-ofertas.png.png?1587356263"
+                oferta.imagen = "/img/logo.jpg"
             }
+
+            oferta.precio = formatoPrecio(oferta.precio)
         });
-        res.render("resultados", { autenticacion, respuesta, nombre })
+        res.render("resultados", { autenticacion, respuesta, nombre, admin })
     } catch (error) {
         console.log(error)
-        res.render("resultados", { autenticacion, nombre })
+        let admin = req.session.passport.user.admin
+        res.render("resultados", { autenticacion, nombre, admin })
     }
 
 
@@ -289,13 +301,16 @@ router.get("/buscar", (req, res, next) => {
 router.get("/que-es-ofertapp", (req, res, next) => {
     if (req.isAuthenticated()) {
         autenticacion = true
-        return next()
+        let admin = req.session.passport.user.admin
+        if (admin) {
+            res.render("que-es-ofertapp", { autenticacion, nombre, admin })
+        } else {
+            res.render("que-es-ofertapp", { autenticacion, nombre })
+        }
     } else {
         autenticacion = false
-        next()
+        res.render("que-es-ofertapp",{autenticacion})
     }
-}, (req, res) => {
-    res.render("que-es-ofertapp", { autenticacion, nombre })
 }
 
 )
@@ -308,7 +323,8 @@ router.get("/contacto", (req, res, next) => {
         autenticacion = true
         let apellido = req.session.passport.user.apellido
         let correo = req.session.passport.user.correo
-        res.render("contacto", { autenticacion, nombre, apellido, correo })
+        let admin = req.session.passport.user.admin
+        res.render("contacto", { autenticacion, nombre, apellido, correo, admin })
     } else {
         autenticacion = false
         res.render("contacto", { autenticacion, nombre })
@@ -332,19 +348,45 @@ router.post("/contacto", body("correo").isString().notEmpty(),
     }
 )
 
-//-------------------------------------------------------- Perfil -------------------------------------------------------------
+//-------------------------------------------------------- Ingreso Administrador -------------------------------------------------------------
 
-router.get("/admin", (req, res, next) => {
+router.get("/admin", async (req, res, next) => {
     if (req.isAuthenticated()) {
         autenticacion = true
-        let apellido = req.session.passport.user.apellido
-        let correo = req.session.passport.user.correo
-        res.render("contacto", { autenticacion, nombre, apellido, correo })
+        let admin = req.session.passport.user.admin
+        if (admin) {
+            let usuarios = await infoUsuariosConOfertas()
+            let info = await usuarios.json()
+
+            let infoOfertas = await obtenerOfertasAdmin()
+            let ofertas = await infoOfertas.json()
+            ofertas.forEach(oferta => {
+                if (oferta.imagen == null) {
+                    oferta.imagen = "Sin Imagen"
+                }
+            })
+            res.render("admin", { autenticacion, nombre, info, ofertas, admin })
+        } else {
+            res.render("index", { autenticacion, nombre })
+        }
+
     } else {
         autenticacion = false
-        res.render("ind", { autenticacion, nombre })
+        res.render("index", { autenticacion })
     }
 })
+
+
+router.post("/borrar-oferta-admin", async (req, res, next) => {
+    if (req.isAuthenticated()) {
+        let { id } = req.body
+        let respuesta = await borrarOferta(id)
+        res.send(respuesta)
+    } else {
+        autenticacion = false
+        res.render("index", { autenticacion })
+    }
+});
 
 //-------------------------------------------------------- Terminar sesión de usuario -------------------------------------------------------------
 router.get('/logout', (req, res, next) => {
@@ -358,8 +400,9 @@ router.get('/logout', (req, res, next) => {
 //------------------------------------------------------------ Dirección Erronea ----------------------------------------------------------------
 router.get("*", (req, res, next) => {
     if (req.isAuthenticated()) {
+        let admin = req.session.passport.user.admin
         autenticacion = true
-        res.render("error", { autenticacion, nombre })
+        res.render("error", { autenticacion, nombre, admin })
     } else {
         res.render("error")
     }

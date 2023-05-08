@@ -1,3 +1,4 @@
+
 .card-img-top{
     display: flex;
     justify-content: center;
@@ -10,13 +11,22 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    width: 100%;
 }
 
 #btn-subir{
     width: 100%;
 }
 
-#main-subir, #main-login, #main-registro{
+#main-subir-oferta{
+    display: flex!important;
+    justify-content: center!important;
+    flex-direction: column!important;
+    align-items: center!important;
+    width: 100%!important;
+}
+
+#main-login, #main-registro{
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -36,7 +46,7 @@
 }
 
 .card-info, .card-subir{
-    width: 80%!important;
+    width: 100%!important;
 }
 
 @media screen and (max-width: 992px) {

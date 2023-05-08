@@ -27,13 +27,13 @@ export async function ingresarOferta(body){
             }})
             if(respuesta.status == 200){
                 let data = await respuesta.json()
-                return data.success
+                return {mensaje: "Oferta ingresada con éxito"}
             }else{
-                return false
+                return {mensaje: "Error: Oferta no ingresada, intenta nuevamente"}
             }
         }catch(error){
             console.log(error)
-            return false
+            return {mensaje: "Error: Oferta no ingresada, intenta nuevamente"}
         }
     
 }
@@ -53,15 +53,15 @@ export async function nuevoUsuario(body){
         
         if(respuesta.status == 200){
             let data = await respuesta.json()
-            return data.success
+            return {mensaje: "Usuario Ingresado correctamente"}
         }else{
-            return false
+            return {mensaje: "Error al ingresar usuario"}
         }
         
     } catch (error){
         
         console.log(error)
-        return false
+        return {mensaje: "Error al ingresar usuario"}
     }
 }
 
@@ -110,3 +110,32 @@ export async function obtenerCategorias(){
         return []
     }
 }
+
+export async function obtenerOfertasAdmin(){
+    try{
+        let respuesta = await fetch(`http://localhost:4000/v1/obtener-ofertas-admin`)
+        return respuesta
+        
+    }catch(error){
+        console.log(error)
+        return []
+    }
+}
+
+export async function borrarOferta(id){
+    try {
+      let respuesta = await fetch("http://localhost:4000/v1/borrar-oferta-admin", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          id: id
+        })
+      });
+      return respuesta.json();
+    } catch (error) {
+      console.log(error)
+      return {error: "Error al eliminar oferta"}
+    }
+  }

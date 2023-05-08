@@ -104,24 +104,27 @@ formularioSubida.addEventListener("submit", async evento =>{
         info.imagen = ""
     }
     
-    fetch("http://localhost:3000/oferta-nueva",{
+    let respuesta = await fetch("http://localhost:3000/oferta-nueva",{
         method: 'POST',  
         headers: { 
         'Content-type' : 'application/json' 
         }, 
         body: JSON.stringify(info)
-    })
-    .then(response => response.json())
-    .then(data => { 
-        console.log(data)
-        if(data == true){
-            alert("Oferta ingresada con éxito")
-            
-            location.reload()
-        }else{
-            alert("ERROR - Oferta no Ingresada")
-            
-        }
-    })
-  
+    }) 
+    
+    let mensaje = await respuesta.json()
+
+    var modal = document.getElementById('myModal');
+    var modalInstance = new bootstrap.Modal(modal);
+    let mensajeModal = document.getElementById("mensajeModal")
+    mensajeModal.innerText = mensaje.mensaje
+    modalInstance.show();
+
+ 
 })
+
+//Función recargar pagina
+
+function recargarPagina(){
+    location.reload()
+}
