@@ -7,7 +7,6 @@ import PassportLocal from "passport-local"
 import session from "express-session"
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv"
-import swal from "sweetalert2"
 import flash from 'express-flash'
 
 
