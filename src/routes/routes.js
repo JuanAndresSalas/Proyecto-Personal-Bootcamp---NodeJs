@@ -145,11 +145,11 @@ router.post("/formregistro", body("correo").isEmail().notEmpty(),
 
 //---------------------------------------------------------------- Login ------------------------------------------------------------------------- 
 router.get("/login", (req, res) => {
-    res.render("login",{mensajeError})
+    res.render("login", { mensajeError })
 })
 /*Comprobación de login, usando passport.authenticate mediante la estrategia "local" creada anteriormente,
 en caso de éxito dirige  a "index", en caso de fallo al autenticar dirige a "login" */
-router.post("/ingreso", passport.authenticate("local", { failureRedirect: "/login"}),
+router.post("/ingreso", passport.authenticate("local", { failureRedirect: "/login" }),
     async (req, res) => {
         nombre = req.session.passport.user.name
         let admin = req.session.passport.user.admin
@@ -265,37 +265,44 @@ router.get("/busqueda", async (req, res, next) => {
     }
 })
 
-router.get("/buscar", (req, res, next) => {
-
+router.get("/buscar", async (req, res, next) => {
+    let {busqueda} = req.query
     if (req.isAuthenticated()) { //Si ya está autenticado seguira al siguiente parámetro que ingresemos a router.get()
         autenticacion = true
-        return next()
+        try {
+            let respuesta = await busquedaOfertas(busqueda)
+            let admin = req.session.passport.user.admin
+            respuesta.forEach(oferta => {
+                if (oferta.imagen == null) {
+                    oferta.imagen = "/img/logo.jpg"
+                }
+
+                oferta.precio = formatoPrecio(oferta.precio)
+            });
+            res.render("resultados", { autenticacion, respuesta, nombre, admin })
+
+        } catch (error) {
+            console.log(error)
+            res.render("resultados", { autenticacion, nombre })
+        }
     } else {
         autenticacion = false
-        return next()
+        try {
+            let respuesta = await busquedaOfertas(busqueda)
+            respuesta.forEach(oferta => {
+                if (oferta.imagen == null) {
+                    oferta.imagen = "/img/logo.jpg"
+                }
+
+                oferta.precio = formatoPrecio(oferta.precio)
+            });
+            res.render("resultados", { autenticacion, respuesta, nombre })
+        } catch (error) {
+            console.log(error)
+
+        }
+
     }
-}, async (req, res) => {
-    let busqueda = req.query.busqueda
-
-    try {
-        let respuesta = await busquedaOfertas(busqueda)
-        let admin = req.session.passport.user.admin
-        respuesta.forEach(oferta => {
-            if (oferta.imagen == null) {
-                oferta.imagen = "/img/logo.jpg"
-            }
-
-            oferta.precio = formatoPrecio(oferta.precio)
-        });
-        res.render("resultados", { autenticacion, respuesta, nombre, admin })
-    } catch (error) {
-        console.log(error)
-        let admin = req.session.passport.user.admin
-        res.render("resultados", { autenticacion, nombre, admin })
-    }
-
-
-
 })
 
 
@@ -312,7 +319,7 @@ router.get("/que-es-ofertapp", (req, res, next) => {
         }
     } else {
         autenticacion = false
-        res.render("que-es-ofertapp",{autenticacion})
+        res.render("que-es-ofertapp", { autenticacion })
     }
 }
 
