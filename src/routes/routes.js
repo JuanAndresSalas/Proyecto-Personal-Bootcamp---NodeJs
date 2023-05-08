@@ -7,7 +7,7 @@ import PassportLocal from "passport-local"
 import session from "express-session"
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv"
-import swal from "sweetalert2"
+
 import flash from 'express-flash'
 
 
@@ -23,6 +23,7 @@ const PassPortLocal = PassportLocal.Strategy
 //-------------------------------------------------------------- Variables --------------------------------------------------------------------------------
 let nombre;
 let autenticacion = false;
+let mensajeError
 
 //------------------------------------------------------- Configuracion de dotenv ------------------------------------------------------------------
 dotenv.config()
@@ -57,7 +58,8 @@ passport.use(new PassPortLocal(async function (username, password, done) {
 
     const usuario = await obtenerUsuario(username, password)
     if (!usuario) {
-        return done(null, false, { message: 'Credenciales incorrectas' })
+        mensajeError = { mensaje: 'Credenciales incorrectas' }
+        return done(null, false)
     } else {
         if (usuario.admin == 1) {
             return done(null, { id: usuario.idusuario, name: usuario.nombre, correo: usuario.correo, apellido: usuario.apellido, admin: true })
@@ -144,7 +146,7 @@ router.post("/formregistro", body("correo").isEmail().notEmpty(),
 
 //---------------------------------------------------------------- Login ------------------------------------------------------------------------- 
 router.get("/login", (req, res) => {
-    res.render("login")
+    res.render("login",{mensajeError})
 })
 /*Comprobación de login, usando passport.authenticate mediante la estrategia "local" creada anteriormente,
 en caso de éxito dirige  a "index", en caso de fallo al autenticar dirige a "login" */
@@ -160,7 +162,7 @@ router.post("/ingreso", passport.authenticate("local", { failureRedirect: "/logi
 
             res.render("index", { autenticacion, nombre })
         }
-
+        mensajeError = false
 
     }
 )
