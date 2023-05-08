@@ -3,6 +3,7 @@ let correo = document.getElementById("correo")
 let mensaje = document.getElementById("mensaje")
 let formulario = document.getElementById("form-contacto")
 
+//Lectura de parámetros de entrada
 formulario.addEventListener("submit",(evento) =>{
     evento.preventDefault()
 

@@ -15,7 +15,14 @@
                     <label for="exampleInputPassword1" class="form-label">Contraseña</label>
                     <input type="password" class="form-control" id="password" name="password" required>
                 </div>
+<<<<<<< HEAD
                 <button type="submit" class="btn btn-dark btn-login">Ingresar</button>
+=======
+                {{#if message.error}}
+                    <div class="alert alert-danger">{{message.error}}</div>
+                {{/if}}
+                <button type="submit" class="btn btn-dark btn-login" >Ingresar</button>
+>>>>>>> 46b50efa2a1d4ffc52f08c06b870dfdb58551bba
             </form>
             
         </div>
@@ -27,8 +34,13 @@
 </main>
 {{/template}}
 
+<<<<<<< HEAD
 {{#if mensajeError}}
     <div class="modal" tabindex="-1" id="myModal">
+=======
+{{#if mensaje}}
+    <div class="modal fade" tabindex="-1" id="myModal">
+>>>>>>> 46b50efa2a1d4ffc52f08c06b870dfdb58551bba
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -36,7 +48,11 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+<<<<<<< HEAD
                     <p>{{mensajeError.mensaje}}</p>
+=======
+                    <p>{{mensaje}}</p>
+>>>>>>> 46b50efa2a1d4ffc52f08c06b870dfdb58551bba
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>

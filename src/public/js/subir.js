@@ -10,8 +10,9 @@ const formularioSubida = document.getElementById("formSubir")
 const lugar = document.getElementById("lugar")
 const precio = document.getElementById("precio")
 const descripcion = document.getElementById("descripcion")
-const categoria = document.getElementById("categoria")
+const categoria = document.getElementById("categorias")
 
+//Manipulación de archivos
 
 //Mostrar imagen subida y tranformacion a base64
 /**
@@ -75,6 +76,8 @@ formularioSubida.addEventListener("submit", async evento =>{
         }
         return matches[2];
     }
+
+   
   
     let  info =  {
         
