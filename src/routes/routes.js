@@ -148,22 +148,27 @@ router.get("/login", (req, res) => {
 })
 /*Comprobación de login, usando passport.authenticate mediante la estrategia "local" creada anteriormente,
 en caso de éxito dirige  a "index", en caso de fallo al autenticar dirige a "login" */
-router.post("/ingreso", passport.authenticate("local", { failureRedirect: "/login", failureFlash: true }),
-    async (req, res) => {
-        nombre = req.session.passport.user.name
-        let admin = req.session.passport.user.admin
-        if (admin) {
-            autenticacion = true
-            res.render("index", { autenticacion, nombre, admin })
-        } else {
-            autenticacion = true
-
-            res.render("index", { autenticacion, nombre })
+router.post("/ingreso", (req, res, next) => {
+    passport.authenticate("local", (err, user, info) => {
+        if (err) {
+            return next(err)
         }
-
-
-    }
-)
+        if (!user) {
+            let mensaje = info.message
+            res.render("login",{mensaje})
+        }else{
+            const nombre = user.name
+            const admin = user.admin || false
+            const autenticacion = true
+            if (admin) {
+                res.render("index", { autenticacion, nombre, admin })
+            } else {
+                res.render("index", { autenticacion, nombre })
+            }
+        }
+        
+    })(req, res, next)
+})
 
 //-------------------------------------------------------------- Subir oferta -------------------------------------------------------------------
 
