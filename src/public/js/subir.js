@@ -12,6 +12,7 @@ const precio = document.getElementById("precio")
 const descripcion = document.getElementById("descripcion")
 const categoria = document.getElementById("categorias")
 
+//Manipulación de archivos
 
 //Mostrar imagen subida y tranformacion a base64
 /**

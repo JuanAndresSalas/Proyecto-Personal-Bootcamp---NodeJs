@@ -238,6 +238,7 @@ router.get("/busqueda", async (req, res, next) => {
         let data = await ofertasSugeridas()
         let respuesta = await data.json()
         let admin = req.session.passport.user.admin
+        //Uso de sentencias repetitivas
         respuesta.forEach(oferta => {
             if (oferta.imagen == null) {
                 oferta.imagen = "/img/logo.jpg"
